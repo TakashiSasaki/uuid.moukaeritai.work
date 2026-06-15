@@ -1,0 +1,43 @@
+name: Deploy to GitHub Pages
+
+on:
+  # ユーザーが指定した通り、デフォルトブランチの更新時に実行
+  push:
+    branches: ["uuid.moukaeritai.work"]
+
+  # 手動実行も可能にする
+  workflow_dispatch:
+
+# GitHub Pagesへのデプロイには、書き込み権限が必要
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時実行を避けるための設定
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 今回はルートディレクトリをデプロイ対象とする
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
