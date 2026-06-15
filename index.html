@@ -1,56 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UUIDv8-FID Specification</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS & Typography Plugin -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+    <!-- Markdown & Code Highlighting -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
-        .prose pre { background-color: #f6f8fa; padding: 1rem; border-radius: 0.5rem; }
-        .prose code { color: #eb5757; background-color: rgba(175, 184, 195, 0.2); padding: 0.2em 0.4em; border-radius: 6px; font-size: 85%; }
-        .prose pre code { color: inherit; background-color: transparent; padding: 0; }
-        .sidebar-link.active { @apply bg-blue-100 text-blue-700 font-semibold; }
+        /* Custom smooth transitions */
+        .sidebar-transition { transition: transform 0.3s ease-in-out; }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Active state for sidebar links */
+        .sidebar-link.active {
+            @apply bg-blue-50 text-blue-600 font-semibold border-r-4 border-blue-600;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-slate-50 text-slate-900 antialiased">
+
+    <!-- Mobile Header -->
+    <header class="md:hidden bg-white border-b border-slate-200 sticky top-0 z-50 px-4 py-3 flex items-center justify-between">
+        <h1 class="text-lg font-bold text-blue-600 tracking-tight">UUIDv8-FID</h1>
+        <button id="menu-toggle" class="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+            <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </header>
 
     <div class="flex min-h-screen">
+        <!-- Sidebar Overlay (Mobile) -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 z-40 hidden md:hidden transition-opacity"></div>
+
         <!-- Sidebar -->
-        <aside class="w-72 bg-white border-r border-gray-200 fixed h-full overflow-y-auto hidden md:block">
-            <div class="p-6">
-                <h1 class="text-xl font-bold text-blue-600">UUIDv8-FID</h1>
-                <p class="text-xs text-gray-500 mt-1">v2 Specification</p>
+        <aside id="sidebar" class="sidebar-transition w-72 bg-white border-r border-slate-200 fixed h-full z-50 -translate-x-full md:translate-x-0 overflow-y-auto no-scrollbar shadow-xl md:shadow-none">
+            <div class="p-8">
+                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">UUIDv8-FID</h1>
+                <p class de class="text-sm text-slate-500 mt-1">Specification v2</p>
             </div>
             <nav class="px-4 pb-10">
-                <div class="mb-6">
-                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">Core Specification</h3>
-                    <ul class="space-y-1 text-sm" id="core-nav">
-                        <!-- Populated by JS -->
-                    </ul>
+                <div class="mb-8">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3 px-3">Core Specification</h3>
+                    <ul class="space-y-1 text-sm" id="core-nav"></ul>
                 </div>
-                <div class="mb-6">
-                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">Detailed Sections</h3>
-                    <ul class="space-y-1 text-sm" id="details-nav">
-                        <!-- Populated by JS -->
-                    </ul>
+                <div class="mb-8">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3 px-3">Detailed Sections</h3>
+                    <ul class="space-y-1 text-sm" id="details-nav"></ul>
                 </div>
-                <div class="mb-6">
-                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">Reference</h3>
+                <div class="mb-8">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3 px-3">Resources</h3>
                     <ul class="space-y-1 text-sm">
-                        <li><a href="#uuidv8-fid/uuidv8-fid-v2/uuidv8-fid-v2-registry.md" class="block px-2 py-1 text-gray-600 hover:bg-gray-100 rounded">Registry</a></li>
-                        <li><a href="#uuidv8-fid/uuidv8-fid-v2/README.md" class="block px-2 py-1 text-gray-600 hover:bg-gray-100 rounded">README</a></li>
+                        <li><a href="#uuidv8-fid/uuidv8-fid-v2/uuidv8-fid-v2-registry.md" class="block px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors">Registry</a></li>
+                        <li><a href="#uuidv8-fid/uuidv8-fid-v2/README.md" class="block px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors">README</a></li>
                     </ul>
                 </div>
             </nav>
         </aside>
 
-        <!-- Main Content -->
+        <!-- Main Content Area -->
         <main class="flex-1 md:ml-72 min-h-screen">
-            <div id="content" class="max-w-4xl mx-auto px-6 py-12 prose prose-blue lg:prose-lg">
-                <div class="flex items-center justify-center h-64 text-gray-400">
+            <div id="content" class="max-w-4xl mx-auto px-6 py-12 lg:py-20 prose prose-slate prose-blue lg:prose-lg transition-opacity duration-300">
+                <div class="flex items-center justify-center h-64 text-slate-400 animate-pulse">
                     <p>Loading documentation...</p>
                 </div>
             </div>
@@ -85,29 +102,64 @@
             ]
         };
 
+        // --- Sidebar & Mobile Controls ---
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        function toggleSidebar() {
+            const isOpen = !sidebar.classList.contains('-translate-x-full');
+            if (isOpen) {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                menuIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            }
+        }
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // --- Content Loading ---
         async function loadMarkdown(path) {
             const contentDiv = document.getElementById('content');
+            contentDiv.style.opacity = '0.5';
+            
             try {
                 const response = await fetch(BASE_PATH + path);
-                if (!response.ok) throw new Error('File not found');
+                if (!response.ok) throw new Error('Document not found');
                 const text = await response.text();
+                
                 contentDiv.innerHTML = marked.parse(text);
                 hljs.highlightAll();
                 
                 // Update URL hash
                 window.location.hash = path;
                 
-                // Update active link
+                // Update active sidebar link
                 document.querySelectorAll('.sidebar-link').forEach(el => {
-                    el.classList.remove('active', 'bg-blue-100', 'text-blue-700', 'font-semibold');
+                    el.classList.remove('active', 'bg-blue-50', 'text-blue-600', 'font-semibold', 'border-r-4', 'border-blue-600');
                 });
                 const activeLink = document.querySelector(`[href="#${path}"]`);
                 if (activeLink) {
-                    activeLink.classList.add('active', 'bg-blue-100', 'text-blue-700', 'font-semibold');
+                    activeLink.classList.add('active', 'bg-blue-50', 'text-blue-600', 'font-semibold', 'border-r-4', 'border-blue-600');
                 }
-                window.scrollTo(0, 0);
+
+                // Close sidebar on mobile after selection
+                if (window.innerWidth < 768) toggleSidebar();
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             } catch (err) {
                 contentDiv.innerHTML = `<div class="text-red-500">Error loading document: ${err.message}</div>`;
+            } finally {
+                contentDiv.style.opacity = '1';
             }
         }
 
@@ -117,13 +169,13 @@
 
             navConfig.core.forEach(item => {
                 const li = document.createElement('li');
-                li.innerHTML = `<a href="#${item.path}" class="sidebar-link block px-2 py-1 text-gray-600 hover:bg-gray-100 rounded">${item.name}</a>`;
+                li.innerHTML = `<a href="#${item.path}" class="sidebar-link block px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-all">${item.name}</a>`;
                 coreNav.appendChild(li);
             });
 
             navConfig.details.forEach(item => {
                 const li = document.createElement('li');
-                li.innerHTML = `<a href="#${item.path}" class="sidebar-link block px-2 py-1 text-gray-600 hover:bg-gray-100 rounded">${item.name}</a>`;
+                li.innerHTML = `<a href="#${item.path}" class="sidebar-link block px-3 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-all">${item.name}</a>`;
                 detailsNav.appendChild(li);
             });
         }
