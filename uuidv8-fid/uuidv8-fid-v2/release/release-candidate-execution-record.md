@@ -1,0 +1,46 @@
+# UUIDv8-FID-v2 Release-Candidate Execution Record
+
+This document is strictly non-normative and does not declare a final release. The canonical specification remains the split files under `uuidv8-fid-v2/`.
+
+## Status
+
+Current milestone: Dual-Form Publication Package Candidate.
+Next gate: Final Publication Decision Gate.
+This stride adds derived release-readiness material for making that future decision.
+Decision status: pending.
+
+See derived release-readiness material:
+- `final-publication-decision-gate.md`
+- `final-publication-decision-checklist.md`
+- `final-publication-preflight-record.md`
+- `final-publication-decision-summary.md`
+
+## Command Execution Results
+
+Execution context: local working tree on branch `uuidv8-fid-final-publication-gate`.
+
+| Command | Status | Exit code | Summary | Notes |
+|---------|--------|-----------|---------|-------|
+| `python uuidv8-fid-v2/tools/check_consistency.py` | PASS | 0 | PASS | no warnings |
+| `python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings` | PASS | 0 | PASS | no warnings |
+| `python uuidv8-fid-v2/tools/test_check_consistency.py` | PASS | 0 | PASS | All mutations passed |
+| `python uuidv8-fid-v2/tools/assemble_single_file.py --check` | PASS | 0 | PASS | verified canonical invariants |
+| `python uuidv8-fid-v2/tools/assemble_single_file.py --verify-output uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md` | PASS | 0 | PASS | single-file artifact is valid |
+| `python uuidv8-fid-v2/tools/test_assemble_single_file.py` | PASS | 0 | PASS | All tests passed |
+
+## Manual Invariant Review
+
+- [x] `0x10` remains the only assigned concrete Format ID
+- [x] `0x11..0xef` remains unassigned
+- [x] `0x00..0x0f` remains reserved
+- [x] `0xf0..0xff` remains reserved
+- [x] `0x7a` remains an unassigned extraction/conformance example only
+- [x] top-level stubs remain non-normative
+- [x] final release is not declared
+- [x] exactly one generated single-file specification artifact exists at the allowed path
+- [x] no other generated single-file artifact exists
+- [x] no CI workflow was added in this stride
+
+## Limitations
+
+This document is an execution and release-readiness record only. It does not change any specification semantics or introduce normative requirements.

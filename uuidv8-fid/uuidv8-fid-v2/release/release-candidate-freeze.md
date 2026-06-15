@@ -1,0 +1,46 @@
+# Release Candidate Freeze
+
+This document is explicitly non-normative. It does not declare a final release.
+
+## Purpose
+
+This document defines what the "release-candidate freeze" means for UUIDv8-FID-v2. The freeze establishes a strict review boundary to allow humans to review the complete publication package before any future final-release decision is made.
+
+## Status
+
+Current milestone: Dual-Form Publication Package Candidate.
+Next gate: Final Publication Decision Gate.
+This stride adds derived release-readiness material for making that future decision.
+Decision status: pending.
+
+See derived release-readiness material:
+* `final-publication-decision-gate.md`
+* `final-publication-decision-checklist.md`
+* `final-publication-preflight-record.md`
+* `final-publication-decision-summary.md`
+
+## Freeze Principles
+
+* **Canonical Specification**: The canonical specification remains the split files under the `uuidv8-fid-v2/` directory.
+* **Review Boundary**: The freeze is purely a review boundary, not a final release.
+* **Publication Package**: The publication candidate package is strictly defined by `publication/publication-candidate-manifest.md`.
+* **Package Verification**: The package verification checklist is defined by `publication/publication-package-verification.md`.
+* **Change Semantics**: After the freeze, any changes to canonical specification files should be treated as requiring a new review pass.
+* **Derived Material**: Changes to derived publication/release/tooling material may still occur, but must preserve the freeze boundary and must strictly not alter normative semantics.
+* **Dual-Form Publication**: Exactly one generated single-file artifact is committed, serving strictly as a generated derivative publication form. No other generated single-file artifact is allowed.
+* **No Rendered HTML**: No rendered HTML package artifact is part of the freeze or committed to the repository.
+* **No CI**: No CI workflow is introduced by this freeze.
+
+## Frozen review boundary
+
+| Area | Included? | Role | Review expectation |
+|---|---|---|---|
+| Canonical split specification | Yes | Core normative text | Full review of invariants and semantics |
+| Registry and format-specific files | Yes | Normative specification | Full review of registry semantics and format constraints |
+| Conformance material | Yes | Structural validation cases | Ensuring exact expected vectors |
+| Implementation support material | Yes | Language-neutral pseudocode | Verification of correct algorithmic logic |
+| Publication candidate package documents | Yes | Package bounds | Ensuring exact file inclusion |
+| Release-readiness documents | Yes | Human checkpoints | Completing checklists and reviews |
+| Local tooling | Yes | Consistency enforcement | Execution yielding zero errors |
+| Generated single-file artifact | Yes | Derived publication form at `uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md` | Verification against canonical source |
+| Other generated/HTML artifacts | No | Build products or unauthorized generated outputs | Must remain completely absent |
