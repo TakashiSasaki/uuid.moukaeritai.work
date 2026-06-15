@@ -1,1 +1,143 @@
-<html><body><h1>Hello from GitHub Actions!</h1></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UUIDv8-FID Specification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        .prose pre { background-color: #f6f8fa; padding: 1rem; border-radius: 0.5rem; }
+        .prose code { color: #eb5757; background-color: rgba(175, 184, 195, 0.2); padding: 0.2em 0.4em; border-radius: 6px; font-size: 85%; }
+        .prose pre code { color: inherit; background-color: transparent; padding: 0; }
+        .sidebar-link.active { @apply bg-blue-100 text-blue-700 font-semibold; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-white border-r border-gray-200 fixed h-full overflow-y-auto hidden md:block">
+            <div class="p-6">
+                <h1 class="text-xl font-bold text-blue-600">UUIDv8-FID</h1>
+                <p class="text-xs text-gray-500 mt-1">v2 Specification</p>
+            </div>
+            <nav class="px-4 pb-10">
+                <div class="mb-6">
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">Core Specification</h3>
+                    <ul class="space-y-1 text-sm" id="core-nav">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                <div class="mb-6">
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">Detailed Sections</h3>
+                    <ul class="space-y-1 text-sm" id="details-nav">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                <div class="mb-6">
+                    <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 px-2">Reference</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><a href="#uuidv8-fid/uuidv8-fid-v2/uuidv8-fid-v2-registry.md" class="block px-2 py-1 text-gray-600 hover:bg-gray-100 rounded">Registry</a></li>
+                        <li><a href="#uuidv8-fid/uuidv8-fid-v2/README.md" class="block px-2 py-1 text-gray-600 hover:bg-gray-100 rounded">README</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-72 min-h-screen">
+            <div id="content" class="max-w-4xl mx-auto px-6 py-12 prose prose-blue lg:prose-lg">
+                <div class="flex items-center justify-center h-64 text-gray-400">
+                    <p>Loading documentation...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const BASE_PATH = 'uuidv8-fid/uuidv8-fid-v2/';
+        const navConfig = {
+            'core': [
+                { name: 'Overview', path: '00-index.md' },
+                { name: 'Status & Scope', path: '01-status-scope.md' },
+                { name: 'Terminology', path: '02-terminology.md' },
+                { name: 'String Representation', path: '03-string-representation.md' },
+                { name: 'Bit Layout', path: '04-bit-layout.md' },
+                { name: 'Part 3 & 4 Layout', path: '05-part3-part4-layout.md' },
+                { name: 'Format ID Fields', path: '06-format-id-fields.md' },
+                { name: 'Parsing & Generation', path: '07-parsing-generation.md' },
+                { name: 'Extraction & Construction', path: '08-extraction-construction.md' },
+                { name: 'Validation', path: '09-validation.md' },
+                { name: 'Compatibility & Security', path: '11-compatibility-security.md' },
+                { name: 'Examples Summary', path: '12-examples-summary.md' },
+            ],
+            'details': [
+                { name: 'Audit', path: 'audit/00-index.md' },
+                { name: 'Conformance', path: 'conformance/00-index.md' },
+                { name: 'Formats', path: 'formats/00-index.md' },
+                { name: 'Implementation', path: 'implementation/00-index.md' },
+                { name: 'Publication', path: 'publication/00-index.md' },
+                { name: 'Release', path: 'release/00-index.md' },
+                { name: 'Tools', path: 'tools/README.md' },
+            ]
+        };
+
+        async function loadMarkdown(path) {
+            const contentDiv = document.getElementById('content');
+            try {
+                const response = await fetch(BASE_PATH + path);
+                if (!response.ok) throw new Error('File not found');
+                const text = await response.text();
+                contentDiv.innerHTML = marked.parse(text);
+                hljs.highlightAll();
+                
+                // Update URL hash
+                window.location.hash = path;
+                
+                // Update active link
+                document.querySelectorAll('.sidebar-link').forEach(el => {
+                    el.classList.remove('active', 'bg-blue-100', 'text-blue-700', 'font-semibold');
+                });
+                const activeLink = document.querySelector(`[href="#${path}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active', 'bg-blue-100', 'text-blue-700', 'font-semibold');
+                }
+                window.scrollTo(0, 0);
+            } catch (err) {
+                contentDiv.innerHTML = `<div class="text-red-500">Error loading document: ${err.message}</div>`;
+            }
+        }
+
+        function initNav() {
+            const coreNav = document.getElementById('core-nav');
+            const detailsNav = document.getElementById('details-nav');
+
+            navConfig.core.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#${item.path}" class="sidebar-link block px-2 py-1 text-gray-600 hover:bg-gray-100 rounded">${item.name}</a>`;
+                coreNav.appendChild(li);
+            });
+
+            navConfig.details.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="#${item.path}" class="sidebar-link block px-2 py-1 text-gray-600 hover:bg-gray-100 rounded">${item.name}</a>`;
+                detailsNav.appendChild(li);
+            });
+        }
+
+        window.addEventListener('hashchange', () => {
+            const path = window.location.hash.substring(1);
+            if (path) loadMarkdown(path);
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initNav();
+            const initialPath = window.location.hash.substring(1) || '00-index.md';
+            loadMarkdown(initialPath);
+        });
+    </script>
+</body>
+</html>
