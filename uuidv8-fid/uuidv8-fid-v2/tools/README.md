@@ -35,16 +35,15 @@ python uuidv8-fid-v2/tools/test_check_consistency.py
 
 ## Assembly Tooling
 
-The assembly tool generates or verifies a single-file document. To regenerate the allowed committed single-file artifact, run:
+The assembly tool generates a single-file document on demand. Generated single-file documents are not committed to the repository. To generate one locally, run:
 
 ```text
-python uuidv8-fid-v2/tools/assemble_single_file.py --output uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md --force
+python uuidv8-fid-v2/tools/assemble_single_file.py --output /tmp/uuidv8-fid-v2-single-file.md
 ```
 
 To verify the committed artifact matches the regenerated output exactly, run:
 
 ```text
-python uuidv8-fid-v2/tools/assemble_single_file.py --verify-output uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md
 ```
 
 The tool can also perform a dry run without writing a file:

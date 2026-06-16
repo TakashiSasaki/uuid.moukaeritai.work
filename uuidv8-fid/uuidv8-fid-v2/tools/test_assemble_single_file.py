@@ -76,7 +76,7 @@ class TestAssembleSingleFile(unittest.TestCase):
             # Then verify it matches
             res = self.run_tool(["--verify-output", output_path])
             self.assertEqual(res.returncode, 0)
-            self.assertIn("Verified: committed single-file artifact matches regenerated output.", res.stdout)
+            self.assertIn("Verified: provided file matches regenerated output.", res.stdout)
 
     def test_verify_output_missing_file_fails(self):
         with tempfile.TemporaryDirectory() as tmpdir:

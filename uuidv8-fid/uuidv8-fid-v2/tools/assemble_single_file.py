@@ -132,7 +132,7 @@ def main():
             print(f"Error: regenerated output does not match the committed artifact: {args.verify_output}", file=sys.stderr)
             sys.exit(1)
 
-        print("Verified: committed single-file artifact matches regenerated output.")
+        print("Verified: provided file matches regenerated output.")
 
     if args.stdout:
         print(content)

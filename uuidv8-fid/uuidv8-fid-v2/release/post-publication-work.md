@@ -12,7 +12,7 @@ This document records possible future work after publication and does not commit
 
 * CI integration for the local checker;
 * expanded link checking;
-* generated single-file artifact generation;
+* single-file artifact local generation;
 * stricter Markdown/JSON alignment checks.
 
 ## 3. Possible implementation examples

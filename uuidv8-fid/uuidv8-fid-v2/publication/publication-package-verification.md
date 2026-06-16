@@ -25,9 +25,9 @@ See derived release-readiness material:
 - [ ] Confirm all manifest paths exist.
 - [ ] Confirm canonical split files remain under `uuidv8-fid-v2/`.
 - [ ] Confirm top-level stubs remain non-normative.
-- [ ] Confirm only the allowed generated single-file artifact exists at `uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md`.
+- [ ] Confirm no generated single-file artifact is committed.
 - [ ] Review single-file-assembly-dry-run-record.md.
-- [ ] Review dual-form-publication-verification-record.md.
+- [ ] Review split-canonical-publication-policy-record.md.
 - [ ] Confirm no rendered HTML package artifact is committed.
 - [ ] Confirm no CI workflow was added in this stride.
 - [ ] Run `python uuidv8-fid-v2/tools/check_consistency.py`.

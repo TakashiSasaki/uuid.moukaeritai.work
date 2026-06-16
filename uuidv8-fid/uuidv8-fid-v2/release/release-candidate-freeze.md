@@ -27,7 +27,7 @@ See derived release-readiness material:
 * **Package Verification**: The package verification checklist is defined by `publication/publication-package-verification.md`.
 * **Change Semantics**: After the freeze, any changes to canonical specification files should be treated as requiring a new review pass.
 * **Derived Material**: Changes to derived publication/release/tooling material may still occur, but must preserve the freeze boundary and must strictly not alter normative semantics.
-* **Dual-Form Publication**: Exactly one generated single-file artifact is committed, serving strictly as a generated derivative publication form. No other generated single-file artifact is allowed.
+* **Split-Canonical Publication**: The split Markdown files are the canonical source and the only maintained publication form. Generated single-file documents are not committed.
 * **No Rendered HTML**: No rendered HTML package artifact is part of the freeze or committed to the repository.
 * **No CI**: No CI workflow is introduced by this freeze.
 
@@ -42,5 +42,5 @@ See derived release-readiness material:
 | Publication candidate package documents | Yes | Package bounds | Ensuring exact file inclusion |
 | Release-readiness documents | Yes | Human checkpoints | Completing checklists and reviews |
 | Local tooling | Yes | Consistency enforcement | Execution yielding zero errors |
-| Generated single-file artifact | Yes | Derived publication form at `uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md` | Verification against canonical source |
+| Generated single-file artifact | No | Generated on demand only | Not committed |
 | Other generated/HTML artifacts | No | Build products or unauthorized generated outputs | Must remain completely absent |

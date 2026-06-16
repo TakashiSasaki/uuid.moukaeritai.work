@@ -26,7 +26,7 @@ All local consistency checks and test harnesses must execute successfully with n
 
 A complete review must be recorded and passed, satisfying the constraints set out in:
 * `release/human-review-record.md`
-* `release/dual-form-publication-verification-record.md`
+* `release/split-canonical-publication-policy-record.md`
 
 ## Status
 
@@ -54,4 +54,4 @@ Following the completion of the required checks and review, the allowed outcomes
 
 * This document does not itself publish or finalize UUIDv8-FID-v2.
 * This document does not declare a final release.
-* This document does not generate a single-file artifact.
+* Single-file output is generated on demand only and is not committed.
