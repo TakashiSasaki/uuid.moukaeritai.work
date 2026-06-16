@@ -623,6 +623,18 @@ def check_release_non_final_guard():
         "release/split-canonical-publication-policy-record.md": [
             "non-normative",
             "does not declare a final release"
+        ],
+        "release/release-candidate-notes.md": [
+            "non-normative",
+            "does not declare a final release"
+        ],
+        "release/release-candidate-freeze.md": [
+            "non-normative",
+            "does not declare a final release"
+        ],
+        "release/release-candidate-execution-record.md": [
+            "non-normative",
+            "does not declare a final release"
         ]
     }
 
@@ -1118,7 +1130,7 @@ def check_final_publication_decision_gate():
             errors.append(f"Missing expected final decision gate file: {f}")
 
     if errors:
-        report_fail(group, "\n".join(errors))
+        report_fail(group, ", ".join(errors))
     else:
         report_pass(group)
 
