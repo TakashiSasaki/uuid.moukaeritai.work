@@ -13,10 +13,10 @@ This document is strictly non-normative and does not declare a final release.
 - [ ] Confirm that the split files remain the canonical source.
 
 ## Dual-form publication package
-- [ ] Confirm that the single-file artifact is a generated derivative publication form.
+- [ ] Confirm no generated single-file artifact is committed.
 
 ## Generated artifact verification
-- [ ] Confirm that the single-file artifact verifies against regenerated output.
+
 - [ ] Confirm that no unauthorized generated artifact is present.
 
 ## Conformance material

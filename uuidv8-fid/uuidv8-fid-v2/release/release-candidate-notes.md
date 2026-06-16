@@ -44,7 +44,7 @@ See derived release-readiness material:
 * review any warnings;
 * verify top-level stubs remain non-normative;
 * verify no new Format ID was introduced accidentally;
-* verify no generated single-file artifact is allowed except the committed generated derivative publication form at `uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md`.
+* verify no generated single-file artifact is committed.
 
 ## 4. Not included in this release candidate
 

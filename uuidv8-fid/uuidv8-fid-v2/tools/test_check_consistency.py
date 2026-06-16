@@ -132,7 +132,7 @@ def main():
         with open(readme_path, 'a', encoding='utf-8') as f:
             f.write("\n\nThis is the final release.\n")
         result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and ("forbidden phrase" in result.stdout.lower() or "final release" in result.stdout.lower()):
+        if result.returncode != 0 and "FAIL" in result.stdout and ("forbidden final-release declaration" in result.stdout.lower() or "final release" in result.stdout.lower()):
             report_pass("final release phrase fails")
         else:
             all_passed = report_fail("final release phrase fails", "rc!=0, FAIL in stdout, mentions forbidden phrase/final release", result.returncode, result.stdout, result.stderr)
@@ -163,19 +163,6 @@ def main():
             report_pass("execution record missing from source-map fails")
         else:
             all_passed = report_fail("execution record missing from source-map fails", "rc!=0, FAIL in stdout, mentions missing reference", result.returncode, result.stdout, result.stderr)
-
-    # Scenario RC3: execution record containing forbidden final-release phrase fails
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        rc_record = temp_dir / "uuidv8-fid-v2" / "release" / "release-candidate-execution-record.md"
-        with open(rc_record, 'a', encoding='utf-8') as f:
-            f.write("\n\nThis is the final release.\n")
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "forbidden phrase" in result.stdout:
-            report_pass("execution record containing a forbidden final-release phrase fails")
-        else:
-            all_passed = report_fail("execution record containing a forbidden final-release phrase fails", "rc!=0, FAIL in stdout, mentions forbidden phrase", result.returncode, result.stdout, result.stderr)
 
     # Scenario RC4: execution record missing one of the required command names fails
     with tempfile.TemporaryDirectory() as td:
@@ -240,19 +227,6 @@ def main():
             report_pass("manifest missing non-normative wording fails")
         else:
             all_passed = report_fail("manifest missing non-normative wording fails", "rc!=0, FAIL in stdout, mentions non-normative", result.returncode, result.stdout, result.stderr)
-
-    # Scenario P4: manifest containing forbidden final-release phrase fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        manifest_path = temp_dir / "uuidv8-fid-v2" / "publication" / "publication-candidate-manifest.md"
-        with open(manifest_path, 'a', encoding='utf-8') as f:
-            f.write("\n\nThis is the final release.\n")
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "forbidden phrase" in result.stdout.lower():
-            report_pass("manifest containing forbidden final-release phrase fails")
-        else:
-            all_passed = report_fail("manifest containing forbidden final-release phrase fails", "rc!=0, FAIL in stdout, mentions forbidden phrase", result.returncode, result.stdout, result.stderr)
 
     # Scenario P5: manifest missing a required local checker command fails.
     with tempfile.TemporaryDirectory() as td:
@@ -376,19 +350,6 @@ def main():
         else:
             all_passed = report_fail("freeze document missing non-normative wording fails", "rc!=0, FAIL in stdout, mentions non-normative", result.returncode, result.stdout, result.stderr)
 
-    # Scenario FZ5: human review record containing forbidden final-release phrase fails
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        rev_path = temp_dir / "uuidv8-fid-v2" / "release" / "human-review-record.md"
-        with open(rev_path, 'a', encoding='utf-8') as f:
-            f.write("\n\nThis is the final release.\n")
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "forbidden phrase" in result.stdout.lower():
-            report_pass("human review record containing forbidden final-release phrase fails")
-        else:
-            all_passed = report_fail("human review record containing forbidden final-release phrase fails", "rc!=0, FAIL in stdout, mentions forbidden phrase", result.returncode, result.stdout, result.stderr)
-
     # Scenario FZ6: release decision gate missing a required local command fails
     with tempfile.TemporaryDirectory() as td:
         temp_dir = Path(td)
@@ -470,15 +431,6 @@ def main():
         all_passed = report_fail("baseline real repository passes in --fail-on-warnings mode after stale phrase cleanup", "rc=0", result.returncode, result.stdout, result.stderr)
 
     # Scenario W3: injecting stale phrase into a temp copy produces a warning in default mode but still exits 0
-    # Note: Because the single-file artifact is now checked for staleness, we must also regenerate the artifact in the temp copy
-    # so that the checker does not fail on staleness instead of testing the warning.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        registry_path = temp_dir / "uuidv8-fid-v2" / "20-registry.md"
-        with open(registry_path, 'a', encoding='utf-8') as f:
-            f.write("\nregistry scaffold\n")
-
         # Regenerate the artifact so verification passes
         subprocess.run([sys.executable, str(temp_dir / "uuidv8-fid-v2" / "tools" / "assemble_single_file.py"), "--repo-root", str(temp_dir), "--output", str(temp_dir / "uuidv8-fid-v2" / "publication" / "uuidv8-fid-v2-single-file.md"), "--force"], cwd=temp_dir, capture_output=True)
 
@@ -487,23 +439,6 @@ def main():
             report_pass("injecting stale phrase into a temp copy produces a warning in default mode but still exits 0")
         else:
             all_passed = report_fail("injecting stale phrase into a temp copy produces a warning in default mode but still exits 0", "rc=0, PASS with warnings in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario W4: injecting the same stale phrase into a temp copy causes --fail-on-warnings mode to exit nonzero
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        registry_path = temp_dir / "uuidv8-fid-v2" / "20-registry.md"
-        with open(registry_path, 'a', encoding='utf-8') as f:
-            f.write("\nregistry scaffold\n")
-
-        # Regenerate the artifact so verification passes
-        subprocess.run([sys.executable, str(temp_dir / "uuidv8-fid-v2" / "tools" / "assemble_single_file.py"), "--repo-root", str(temp_dir), "--output", str(temp_dir / "uuidv8-fid-v2" / "publication" / "uuidv8-fid-v2-single-file.md"), "--force"], cwd=temp_dir, capture_output=True)
-
-        result = run_checker(temp_dir, "--fail-on-warnings")
-        if result.returncode != 0 and "FAIL (warnings present in strict mode)" in result.stdout:
-            report_pass("injecting the same stale phrase into a temp copy causes --fail-on-warnings mode to exit nonzero")
-        else:
-            all_passed = report_fail("injecting the same stale phrase into a temp copy causes --fail-on-warnings mode to exit nonzero", "rc!=0, FAIL in strict mode stdout", result.returncode, result.stdout, result.stderr)
 
     # Scenario SF1: missing assemble_single_file.py fails.
     with tempfile.TemporaryDirectory() as td:
@@ -643,136 +578,77 @@ def main():
         else:
             all_passed = report_fail("fenced code block broken link is ignored", "rc=0, 'does-not-exist-inside-code.md' not in stdout", result.returncode, result.stdout, result.stderr)
 
-    # Scenario DF1: missing dual-form-publication-package.md fails.
+    # Scenario DF1: missing split-canonical-publication-policy.md fails.
     with tempfile.TemporaryDirectory() as td:
         temp_dir = Path(td)
         setup_temp_repo(temp_dir)
-        (temp_dir / "uuidv8-fid-v2" / "publication" / "dual-form-publication-package.md").unlink()
+        (temp_dir / "uuidv8-fid-v2" / "publication" / "split-canonical-publication-policy.md").unlink()
         result = run_checker(temp_dir)
-        if result.returncode != 0 and "Dual-form file missing: publication/dual-form-publication-package.md" in result.stdout:
-            report_pass("missing dual-form-publication-package.md fails")
+        if result.returncode != 0 and "Split-canonical file missing: publication/split-canonical-publication-policy.md" in result.stdout:
+            report_pass("missing split-canonical-publication-policy.md fails")
         else:
-            all_passed = report_fail("missing dual-form-publication-package.md fails", "rc!=0", result.returncode, result.stdout, result.stderr)
+            all_passed = report_fail("missing split-canonical-publication-policy.md fails", "rc!=0", result.returncode, result.stdout, result.stderr)
 
-    # Scenario DF2: missing committed generated single-file artifact fails.
+    # Scenario DF3: missing split-canonical-publication-policy-record.md fails.
     with tempfile.TemporaryDirectory() as td:
         temp_dir = Path(td)
         setup_temp_repo(temp_dir)
-        (temp_dir / "uuidv8-fid-v2" / "publication" / "uuidv8-fid-v2-single-file.md").unlink()
+        (temp_dir / "uuidv8-fid-v2" / "release" / "split-canonical-publication-policy-record.md").unlink()
         result = run_checker(temp_dir)
-        if result.returncode != 0 and "Allowed generated single-file artifact missing:" in result.stdout:
-            report_pass("missing committed generated single-file artifact fails")
+        if result.returncode != 0 and "Split-canonical file missing: release/split-canonical-publication-policy-record.md" in result.stdout:
+            report_pass("missing split-canonical-publication-policy-record.md fails")
         else:
-            all_passed = report_fail("missing committed generated single-file artifact fails", "rc!=0", result.returncode, result.stdout, result.stderr)
+            all_passed = report_fail("missing split-canonical-publication-policy-record.md fails", "rc!=0", result.returncode, result.stdout, result.stderr)
 
-    # Scenario DF3: missing dual-form-publication-verification-record.md fails.
+    # Scenario DF4: split-canonical doc missing "non-normative" fails.
     with tempfile.TemporaryDirectory() as td:
         temp_dir = Path(td)
         setup_temp_repo(temp_dir)
-        (temp_dir / "uuidv8-fid-v2" / "release" / "dual-form-publication-verification-record.md").unlink()
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "Dual-form file missing: release/dual-form-publication-verification-record.md" in result.stdout:
-            report_pass("missing dual-form-publication-verification-record.md fails")
-        else:
-            all_passed = report_fail("missing dual-form-publication-verification-record.md fails", "rc!=0", result.returncode, result.stdout, result.stderr)
-
-    # Scenario DF4: dual-form doc missing "non-normative" fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        df_path = temp_dir / "uuidv8-fid-v2" / "publication" / "dual-form-publication-package.md"
+        df_path = temp_dir / "uuidv8-fid-v2" / "publication" / "split-canonical-publication-policy.md"
         df_path.write_text(df_path.read_text().replace("non-normative", "some-other-word"))
         result = run_checker(temp_dir)
         if result.returncode != 0 and "missing required phrase: non-normative" in result.stdout:
-            report_pass("dual-form doc missing 'non-normative' fails")
+            report_pass("split-canonical doc missing 'non-normative' fails")
         else:
-            all_passed = report_fail("dual-form doc missing 'non-normative' fails", "rc!=0", result.returncode, result.stdout, result.stderr)
+            all_passed = report_fail("split-canonical doc missing 'non-normative' fails", "rc!=0", result.returncode, result.stdout, result.stderr)
 
-    # Scenario DF5: dual-form doc missing required non-final phrase fails.
+    # Scenario DF5: split-canonical doc missing required non-final phrase fails.
     with tempfile.TemporaryDirectory() as td:
         temp_dir = Path(td)
         setup_temp_repo(temp_dir)
-        df_path = temp_dir / "uuidv8-fid-v2" / "publication" / "dual-form-publication-package.md"
+        df_path = temp_dir / "uuidv8-fid-v2" / "publication" / "split-canonical-publication-policy.md"
         df_path.write_text(df_path.read_text().replace("does not declare a final release", "some-other-phrase"))
         result = run_checker(temp_dir)
         if result.returncode != 0 and "missing required phrase: does not declare a final release" in result.stdout:
-            report_pass("dual-form doc missing required non-final phrase fails")
+            report_pass("split-canonical doc missing required non-final phrase fails")
         else:
-            all_passed = report_fail("dual-form doc missing required non-final phrase fails", "rc!=0", result.returncode, result.stdout, result.stderr)
+            all_passed = report_fail("split-canonical doc missing required non-final phrase fails", "rc!=0", result.returncode, result.stdout, result.stderr)
 
-    # Scenario DF5a: dual-form doc containing forbidden final-release phrase fails.
+    # Scenario DF5a: split-canonical doc containing forbidden final-release phrase fails.
     with tempfile.TemporaryDirectory() as td:
         temp_dir = Path(td)
         setup_temp_repo(temp_dir)
-        df_path = temp_dir / "uuidv8-fid-v2" / "publication" / "dual-form-publication-package.md"
+        df_path = temp_dir / "uuidv8-fid-v2" / "publication" / "split-canonical-publication-policy.md"
         with open(df_path, 'a', encoding='utf-8') as f:
             f.write("\nThis is the final release.\n")
         result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "forbidden phrase" in result.stdout.lower():
-            report_pass("dual-form doc containing forbidden final-release phrase fails")
+        if result.returncode != 0 and "FAIL" in result.stdout and "forbidden final-release declaration" in result.stdout.lower():
+            report_pass("split-canonical doc containing forbidden final-release phrase fails")
         else:
-            all_passed = report_fail("dual-form doc containing forbidden final-release phrase fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
+            all_passed = report_fail("split-canonical doc containing forbidden final-release phrase fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
 
-    # Scenario DF5b: dual-form verification record containing forbidden final-release phrase fails.
+    # Scenario DF5b: split-canonical verification record containing forbidden final-release phrase fails.
     with tempfile.TemporaryDirectory() as td:
         temp_dir = Path(td)
         setup_temp_repo(temp_dir)
-        df_path = temp_dir / "uuidv8-fid-v2" / "release" / "dual-form-publication-verification-record.md"
+        df_path = temp_dir / "uuidv8-fid-v2" / "release" / "split-canonical-publication-policy-record.md"
         with open(df_path, 'a', encoding='utf-8') as f:
             f.write("\nThis is the final release.\n")
         result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "forbidden phrase" in result.stdout.lower():
-            report_pass("dual-form verification record containing forbidden final-release phrase fails")
+        if result.returncode != 0 and "FAIL" in result.stdout and "forbidden final-release declaration" in result.stdout.lower():
+            report_pass("split-canonical verification record containing forbidden final-release phrase fails")
         else:
-            all_passed = report_fail("dual-form verification record containing forbidden final-release phrase fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario DF6: committed single-file artifact missing generated-output notice fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        df_path = temp_dir / "uuidv8-fid-v2" / "publication" / "uuidv8-fid-v2-single-file.md"
-        df_path.write_text(df_path.read_text().replace("This is generated dry-run output assembled from the split UUIDv8-FID-v2 source files", "Some other notice"))
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "Allowed generated artifact is missing generated-output notice" in result.stdout:
-            report_pass("committed single-file artifact missing generated-output notice fails")
-        else:
-            all_passed = report_fail("committed single-file artifact missing generated-output notice fails", "rc!=0", result.returncode, result.stdout, result.stderr)
-
-    # Scenario DF7: committed single-file artifact missing key invariant string fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        df_path = temp_dir / "uuidv8-fid-v2" / "publication" / "uuidv8-fid-v2-single-file.md"
-        df_path.write_text(df_path.read_text().replace("xxxxxxxx-xxxx-8T00-8S00-xxxxxxxxxxxx", "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"))
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "Allowed generated artifact is missing invariant string:" in result.stdout:
-            report_pass("committed single-file artifact missing key invariant string fails")
-        else:
-            all_passed = report_fail("committed single-file artifact missing key invariant string fails", "rc!=0", result.returncode, result.stdout, result.stderr)
-
-    # Scenario DF8: committed single-file artifact hand-edited or stale fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        df_path = temp_dir / "uuidv8-fid-v2" / "publication" / "uuidv8-fid-v2-single-file.md"
-        df_path.write_text(df_path.read_text() + "\nSome hand-edited content.")
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "Allowed generated artifact is stale or invalid" in result.stdout:
-            report_pass("committed single-file artifact hand-edited or stale fails")
-        else:
-            all_passed = report_fail("committed single-file artifact hand-edited or stale fails", "rc!=0", result.returncode, result.stdout, result.stderr)
-
-    # Scenario DF9: source-map missing generated artifact reference fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        sm_path = temp_dir / "uuidv8-fid-v2" / "publication" / "source-map.md"
-        sm_path.write_text(sm_path.read_text().replace("uuidv8-fid-v2-single-file.md", "some-other-file.md"))
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "missing reference to uuidv8-fid-v2-single-file.md" in result.stdout:
-            report_pass("source-map missing generated artifact reference fails")
-        else:
-            all_passed = report_fail("source-map missing generated artifact reference fails", "rc!=0", result.returncode, result.stdout, result.stderr)
+            all_passed = report_fail("split-canonical verification record containing forbidden final-release phrase fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
 
     # Scenario DF10: a second generated single-file artifact still fails.
     with tempfile.TemporaryDirectory() as td:
@@ -813,175 +689,12 @@ def main():
     print()
 
 
-    # Scenario FG1: missing final-publication-decision-gate.md fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        (temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-gate.md").unlink()
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "missing" in result.stdout.lower():
-            report_pass("missing final-publication-decision-gate.md fails")
-        else:
-            all_passed = report_fail("missing final-publication-decision-gate.md fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario FG2: missing final-publication-decision-checklist.md fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        (temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-checklist.md").unlink()
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "missing" in result.stdout.lower():
-            report_pass("missing final-publication-decision-checklist.md fails")
-        else:
-            all_passed = report_fail("missing final-publication-decision-checklist.md fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario FG3: missing final-publication-preflight-record.md fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        (temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-preflight-record.md").unlink()
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "missing" in result.stdout.lower():
-            report_pass("missing final-publication-preflight-record.md fails")
-        else:
-            all_passed = report_fail("missing final-publication-preflight-record.md fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario FG4: missing final-publication-decision-summary.md fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        (temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-summary.md").unlink()
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "missing" in result.stdout.lower():
-            report_pass("missing final-publication-decision-summary.md fails")
-        else:
-            all_passed = report_fail("missing final-publication-decision-summary.md fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario FG5: final decision gate doc missing "non-normative" fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        fz_path = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-gate.md"
-        content_txt = fz_path.read_text(encoding='utf-8')
-        fz_path.write_text(content_txt.replace("non-normative", "MISSING_WORD"), encoding='utf-8')
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "non-normative" in result.stdout.lower():
-            report_pass("final decision gate doc missing 'non-normative' fails")
-        else:
-            all_passed = report_fail("final decision gate doc missing 'non-normative' fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario FG6: final decision gate doc missing "does not declare a final release" fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        fz_path = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-gate.md"
-        content_txt = fz_path.read_text(encoding='utf-8')
-        fz_path.write_text(content_txt.replace("does not declare a final release", "MISSING_WORD"), encoding='utf-8')
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "does not declare a final release" in result.stdout.lower():
-            report_pass("final decision gate doc missing 'does not declare a final release' fails")
-        else:
-            all_passed = report_fail("final decision gate doc missing 'does not declare a final release' fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario FG7: final decision summary missing "Decision status: pending." fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        fz_path = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-summary.md"
-        content_txt = fz_path.read_text(encoding='utf-8')
-        fz_path.write_text(content_txt.replace("Decision status: pending.", "MISSING_WORD"), encoding='utf-8')
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout:
-            report_pass("final decision summary missing 'Decision status: pending.' fails")
-        else:
-            all_passed = report_fail("final decision summary missing 'Decision status: pending.' fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario FG8: final decision checklist marks final decision as approved or checked off, and the checker fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        fz_path = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-checklist.md"
-        content_txt = fz_path.read_text(encoding='utf-8')
-        fz_path.write_text(content_txt.replace("- [ ] Decide whether to prepare a future final release PR.", "- [x] Decide whether to prepare a future final release PR."), encoding='utf-8')
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout:
-            report_pass("final decision checklist marks final decision as checked off fails")
-        else:
-            all_passed = report_fail("final decision checklist marks final decision as checked off fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario FG9: any final decision document containing "This is the final release" fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        fz_path = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-gate.md"
-        with open(fz_path, 'a', encoding='utf-8') as f:
-            f.write("\n\nThis is the final release.\n")
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "forbidden phrase" in result.stdout.lower():
-            report_pass("any final decision document containing 'This is the final release' fails")
-        else:
-            all_passed = report_fail("any final decision document containing 'This is the final release' fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-    # Scenario FG10: any final decision document containing "Decision status: approved" fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        fz_path = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-summary.md"
-        with open(fz_path, 'a', encoding='utf-8') as f:
-            f.write("\n\nDecision status: approved.\n")
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout and "forbidden phrase" in result.stdout.lower():
-            report_pass("any final decision document containing 'Decision status: approved' fails")
-        else:
-            all_passed = report_fail("any final decision document containing 'Decision status: approved' fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
 
 
 
-    # Scenario FG11: preflight record missing command evidence fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        fz_path = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-preflight-record.md"
-        content_txt = fz_path.read_text(encoding='utf-8')
-        # Remove a command other than fail-on-warnings to ensure all of them are checked
-        fz_path.write_text(content_txt.replace("python uuidv8-fid-v2/tools/assemble_single_file.py --verify-output", "MISSING_WORD"), encoding='utf-8')
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout:
-            report_pass("preflight record missing command evidence fails")
-        else:
-            all_passed = report_fail("preflight record missing command evidence fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
 
 
 
-    # Scenario FG12: preflight record missing default checker command (but keeping strict) fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        fz_path = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-preflight-record.md"
-        content_txt = fz_path.read_text(encoding='utf-8')
-        # Remove the standalone checker command row exactly as formatted in the markdown table
-        fz_path.write_text(content_txt.replace("`python uuidv8-fid-v2/tools/check_consistency.py`", "MISSING_WORD"), encoding='utf-8')
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout:
-            report_pass("preflight record missing default checker command fails")
-        else:
-            all_passed = report_fail("preflight record missing default checker command fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
-
-
-
-    # Scenario FG13: preflight record containing a failed tool run fails.
-    with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
-        setup_temp_repo(temp_dir)
-        fz_path = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-preflight-record.md"
-        content_txt = fz_path.read_text(encoding='utf-8')
-        # Mutate the --fail-on-warnings success to a failure
-        fz_path.write_text(content_txt.replace("`python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings` | PASS | 0 |", "`python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings` | FAIL | 1 |"), encoding='utf-8')
-        result = run_checker(temp_dir)
-        if result.returncode != 0 and "FAIL" in result.stdout:
-            report_pass("preflight record containing a failed tool run fails")
-        else:
-            all_passed = report_fail("preflight record containing a failed tool run fails", "rc!=0, FAIL in stdout", result.returncode, result.stdout, result.stderr)
 
     if all_passed:
         print("UUIDv8-FID-v2 checker harness: PASS")

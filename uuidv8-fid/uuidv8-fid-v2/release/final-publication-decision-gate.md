@@ -12,4 +12,4 @@ A human reviewer will decide the final publication decision. The possible future
 - defer publication;
 - reject final publication for now.
 
-This stride does not choose any of those outcomes. The current milestone is Dual-Form Publication Package Candidate. The next gate is Final Publication Decision Gate.
+This stride does not choose any of those outcomes. The current milestone is Split-Canonical Publication Simplification. The split Markdown files are the canonical source and the only maintained publication form. Single-file Markdown output is generated on demand only and is not committed. The next gate is Final Publication Decision Gate.

@@ -25,7 +25,6 @@ Execution context: local working tree on branch `uuidv8-fid-final-publication-ga
 | `python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings` | PASS | 0 | PASS | no warnings |
 | `python uuidv8-fid-v2/tools/test_check_consistency.py` | PASS | 0 | PASS | All mutations passed |
 | `python uuidv8-fid-v2/tools/assemble_single_file.py --check` | PASS | 0 | PASS | verified canonical invariants |
-| `python uuidv8-fid-v2/tools/assemble_single_file.py --verify-output uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md` | PASS | 0 | PASS | single-file artifact is valid |
 | `python uuidv8-fid-v2/tools/test_assemble_single_file.py` | PASS | 0 | PASS | All tests passed |
 
 ## Manual Invariant Review

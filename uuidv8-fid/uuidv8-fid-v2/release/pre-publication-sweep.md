@@ -25,7 +25,7 @@ python uuidv8-fid-v2/tools/check_consistency.py
 python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings
 python uuidv8-fid-v2/tools/test_check_consistency.py
 python uuidv8-fid-v2/tools/assemble_single_file.py --check
-python uuidv8-fid-v2/tools/assemble_single_file.py --verify-output uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md
+python uuidv8-fid-v2/tools/assemble_single_file.py --check
 python uuidv8-fid-v2/tools/test_assemble_single_file.py
 ```
 
@@ -43,7 +43,7 @@ Command execution results may be recorded in `release-candidate-execution-record
 - [ ] Confirm `publication-package-verification.md` is reviewed.
 - [ ] Confirm the navigation smoke test is current.
 - [ ] Confirm publication-facing relative links resolve locally.
-- [ ] Confirm dual-form-publication-verification-record.md is current.
+- [ ] Confirm split-canonical-publication-policy-record.md is current.
 - [ ] Confirm no new Format ID was assigned.
 - [ ] Confirm `0x10` remains the only assigned concrete Format ID.
 - [ ] Confirm `0x11..0xef` remains unassigned.
@@ -51,7 +51,7 @@ Command execution results may be recorded in `release-candidate-execution-record
 - [ ] Confirm `0x7a` remains an unassigned extraction/conformance example only.
 - [ ] Confirm top-level stubs remain non-normative.
 - [ ] Confirm release-candidate notes do not declare a final release.
-- [ ] Confirm exactly one generated single-file specification artifact is committed at the allowed path.
+- [ ] Confirm no generated single-file specification artifact is committed.
 - [ ] Confirm no CI workflow was added for UUIDv8-FID-v2 in this stride.
 
 ## 2.5 Release candidate freeze and human review gate

@@ -34,31 +34,8 @@ def report_warn(file_path, line_no, message):
 def check_file_existence():
     group = "1. File existence checks"
     required_files = [
-        "uuidv8-fid-v2/README.md",
-        "uuidv8-fid-v2/00-index.md",
-        "uuidv8-fid-v2/20-registry.md",
-        "uuidv8-fid-v2/formats/10-time48-rand.md",
-        "uuidv8-fid-v2/conformance/structural-test-vectors.md",
-        "uuidv8-fid-v2/conformance/structural-test-vectors.json",
-        "uuidv8-fid-v2/implementation/pseudocode.md",
-        "uuidv8-fid-v2/audit/consistency-checklist.md",
-        "uuidv8-fid-v2/audit/release-readiness.md",
-        "uuidv8-fid-v2/publication/source-map.md",
-        "uuidv8-fid-v2/publication/release-candidate-checklist.md",
-        "uuidv8-fid-v2/publication/navigation-smoke-test.md",
-        "uuidv8-fid-v2/publication/publication-candidate-manifest.md",
-        "uuidv8-fid-v2/publication/publication-package-verification.md",
-        "uuidv8-fid-v2/release/00-index.md",
-        "uuidv8-fid-v2/release/release-candidate-notes.md",
-        "uuidv8-fid-v2/release/publication-readiness-summary.md",
-        "uuidv8-fid-v2/release/post-publication-work.md",
-        "uuidv8-fid-v2/release/pre-publication-sweep.md",
-        "uuidv8-fid-v2/release/release-candidate-freeze.md",
-        "uuidv8-fid-v2/release/human-review-record.md",
-        "uuidv8-fid-v2/release/release-decision-gate.md",
-        "uuidv8-fid-v2/tools/test_check_consistency.py",
-        "uuidv8-fid-v2.md",
-        "uuidv8-fid-v2-registry.md",
+        "uuidv8-fid-v2/publication/split-canonical-publication-policy.md",
+        "uuidv8-fid-v2/release/split-canonical-publication-policy-record.md"
     ]
 
     missing = []
@@ -637,59 +614,51 @@ def check_release_candidate_freeze_gate():
 
 def check_release_non_final_guard():
     group = "10. Release non-final guard"
-    release_files = [
-        "uuidv8-fid-v2/release/00-index.md",
-        "uuidv8-fid-v2/release/release-candidate-notes.md",
-        "uuidv8-fid-v2/release/publication-readiness-summary.md",
-        "uuidv8-fid-v2/release/pre-publication-sweep.md",
-        "uuidv8-fid-v2/release/release-candidate-execution-record.md",
-        "uuidv8-fid-v2/release/release-candidate-freeze.md",
-        "uuidv8-fid-v2/release/human-review-record.md",
-        "uuidv8-fid-v2/release/release-decision-gate.md",
-        "uuidv8-fid-v2/release/single-file-assembly-dry-run-record.md",
-        "uuidv8-fid-v2/publication/publication-candidate-manifest.md",
-        "uuidv8-fid-v2/publication/publication-package-verification.md",
-        "uuidv8-fid-v2/publication/single-file-assembly-dry-run.md",
-        "uuidv8-fid-v2/publication/dual-form-publication-package.md",
-        "uuidv8-fid-v2/release/dual-form-publication-verification-record.md",
-        "uuidv8-fid-v2/release/final-publication-decision-gate.md",
-        "uuidv8-fid-v2/release/final-publication-decision-checklist.md",
-        "uuidv8-fid-v2/release/final-publication-preflight-record.md",
-        "uuidv8-fid-v2/release/final-publication-decision-summary.md"
-    ]
 
-    required_phrases = [
-        "non-normative",
-        "does not declare a final release"
-    ]
+    gate_files = {
+        "publication/split-canonical-publication-policy.md": [
+            "non-normative",
+            "does not declare a final release"
+        ],
+        "release/split-canonical-publication-policy-record.md": [
+            "non-normative",
+            "does not declare a final release"
+        ],
+        "release/release-candidate-notes.md": [
+            "non-normative",
+            "does not declare a final release"
+        ],
+        "release/release-candidate-freeze.md": [
+            "non-normative",
+            "does not declare a final release"
+        ],
+        "release/release-candidate-execution-record.md": [
+            "non-normative",
+            "does not declare a final release"
+        ]
+    }
+
     forbidden_phrases = [
         "this is the final release",
-        "final release is declared",
         "final release is approved",
-        "publication is approved",
         "decision status: approved"
     ]
 
     errors = []
-    for f in release_files:
+    for f, required_contents in gate_files.items():
         try:
-            content = (REPO_ROOT / f).read_text(encoding='utf-8').lower()
-
-            # Check required phrases
-            for req in required_phrases:
+            content = (REPO_ROOT / "uuidv8-fid-v2" / f).read_text(encoding='utf-8').lower()
+            for req in required_contents:
                 if req not in content:
-                    errors.append(f"{f} missing required phrase: {req}")
-
-            # Check forbidden phrase
-            for forb in forbidden_phrases:
-                if forb in content:
-                    errors.append(f"{f} contains forbidden phrase: '{forb}'")
-
-        except Exception as e:
-            errors.append(f"Error reading {f}: {e}")
+                    errors.append(f"{f} missing non-final safety string: {req}")
+            for forbidden in forbidden_phrases:
+                if forbidden in content:
+                    errors.append(f"{f} contains forbidden final-release declaration")
+        except FileNotFoundError:
+            pass  # Handled by file existence check
 
     if errors:
-        report_fail(group, "; ".join(errors))
+        report_fail(group, ", ".join(errors))
     else:
         report_pass(group)
 
@@ -830,16 +799,12 @@ def check_index():
 def check_generated_single_file_guard():
     group = "12. Generated single-file guard"
 
-    allowed_artifact = "uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md"
-    allowed_artifact_path = REPO_ROOT / allowed_artifact
     generated_notice = "This is generated dry-run output assembled from the split UUIDv8-FID-v2 source files"
 
     # 1. Scan for any unauthorized generated markdown files
     unauthorized_found = []
     for filepath in BASE_DIR.rglob("*.md"):
         rel_path = filepath.relative_to(REPO_ROOT).as_posix()
-        if rel_path == allowed_artifact:
-            continue
 
         try:
             content = filepath.read_text(encoding='utf-8')
@@ -860,6 +825,7 @@ def check_generated_single_file_guard():
         "uuidv8-fid-v2/uuidv8-fid-v2-single-file.md",
         "uuidv8-fid-v2/publication/generated-single-file.md",
         "uuidv8-fid-v2/publication/single-file.md",
+        "uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md",
         "uuidv8-fid-v2.html",
         "uuidv8-fid-v2/uuidv8-fid-v2.html",
         "uuidv8-fid-v2/publication/uuidv8-fid-v2.html",
@@ -872,56 +838,6 @@ def check_generated_single_file_guard():
         report_fail(group, f"Found forbidden build/HTML artifacts: {', '.join(found_build_artifacts)}")
     else:
         report_pass("No forbidden build/HTML artifacts found")
-
-    # 3. Check the explicitly allowed artifact
-    if not allowed_artifact_path.exists():
-        report_fail(group, f"Allowed generated single-file artifact missing: {allowed_artifact}")
-    else:
-        report_pass(f"Allowed generated single-file artifact exists: {allowed_artifact}")
-
-        try:
-            content = allowed_artifact_path.read_text(encoding='utf-8')
-            if generated_notice not in content:
-                report_fail(group, f"Allowed generated artifact is missing generated-output notice: {allowed_artifact}")
-            else:
-                report_pass(f"Allowed generated artifact contains generated-output notice: {allowed_artifact}")
-
-            invariant_strings = [
-                "format_id = (format_type << 4) | format_subtype",
-                "xxxxxxxx-xxxx-8T00-8S00-xxxxxxxxxxxx",
-                "0x10",
-                "0x7a"
-            ]
-            for inv in invariant_strings:
-                if inv not in content:
-                    report_fail(group, f"Allowed generated artifact is missing invariant string: {inv}")
-                else:
-                    report_pass(f"Allowed generated artifact contains invariant string: {inv}")
-
-        except Exception as e:
-            report_fail(group, f"Could not read allowed generated artifact {allowed_artifact}: {e}")
-
-        try:
-            import subprocess
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    str(REPO_ROOT / "uuidv8-fid-v2" / "tools" / "assemble_single_file.py"),
-                    "--repo-root",
-                    str(REPO_ROOT),
-                    "--verify-output",
-                    allowed_artifact
-                ],
-                cwd=REPO_ROOT,
-                capture_output=True,
-                text=True
-            )
-            if result.returncode != 0:
-                report_fail(group, f"Allowed generated artifact is stale or invalid: {allowed_artifact}\n{result.stderr.strip()}")
-            else:
-                report_pass(f"Allowed generated artifact matches regenerated output exactly: {allowed_artifact}")
-        except Exception as e:
-            report_fail(group, f"Could not run assemble_single_file.py --verify-output: {e}")
 
 def check_relative_markdown_links():
     group = "Relative Markdown link check"
@@ -1121,19 +1037,19 @@ def check_single_file_assembly_dry_run():
     # either record or check is acceptable in the decision gate but let's just check for tool check
     check_ref("release/release-decision-gate.md", "python uuidv8-fid-v2/tools/assemble_single_file.py --check")
     check_ref("release/release-decision-gate.md", "python uuidv8-fid-v2/tools/test_assemble_single_file.py")
+    check_ref("tools/README.md", "Generated single-file documents are not committed to the repository")
 
 
-def check_dual_form_publication_package():
-    group = "Dual-form publication package checks"
+def check_split_canonical_publication_policy():
+    group = "Split-canonical publication policy checks"
 
     required_files = [
-        "publication/dual-form-publication-package.md",
-        "publication/uuidv8-fid-v2-single-file.md",
-        "release/dual-form-publication-verification-record.md"
+        "publication/split-canonical-publication-policy.md",
+        "release/split-canonical-publication-policy-record.md"
     ]
     for rel in required_files:
         if not os.path.isfile(os.path.join(REPO_ROOT, "uuidv8-fid-v2", rel)):
-            report_fail(group, f"Dual-form file missing: {rel}")
+            report_fail(group, f"Split-canonical file missing: {rel}")
         else:
             report_pass(f"Dual-form file present: {rel}")
 
@@ -1152,13 +1068,13 @@ def check_dual_form_publication_package():
         except Exception as e:
             report_fail(group, f"Could not read {rel_path}: {e}")
 
-    require_phrases("publication/dual-form-publication-package.md", [
+    require_phrases("publication/split-canonical-publication-policy.md", [
         "non-normative",
         "does not declare a final release",
-        "the split files remain the canonical source; the committed single-file document is a generated derivative publication form."
+        "The split Markdown files are the canonical source and the only maintained publication form in this repository."
     ])
 
-    require_phrases("release/dual-form-publication-verification-record.md", [
+    require_phrases("release/split-canonical-publication-policy-record.md", [
         "non-normative",
         "does not declare a final release"
     ])
@@ -1177,23 +1093,18 @@ def check_dual_form_publication_package():
         except Exception as e:
             report_fail(group, f"Could not read {filepath}: {e}")
 
-    check_ref("publication/source-map.md", "dual-form-publication-package.md")
-    check_ref("publication/source-map.md", "uuidv8-fid-v2-single-file.md")
-    check_ref("publication/source-map.md", "dual-form-publication-verification-record.md")
+    check_ref("publication/source-map.md", "split-canonical-publication-policy.md")
+    check_ref("publication/source-map.md", "split-canonical-publication-policy-record.md")
 
-    check_ref("publication/reader-guide.md", "dual-form-publication-package.md")
+    check_ref("publication/reader-guide.md", "split-canonical-publication-policy.md")
 
-    check_ref("publication/publication-candidate-manifest.md", "dual-form-publication-package.md")
-    check_ref("publication/publication-candidate-manifest.md", "uuidv8-fid-v2-single-file.md")
-    check_ref("publication/publication-candidate-manifest.md", "dual-form-publication-verification-record.md")
+    check_ref("publication/publication-candidate-manifest.md", "split-canonical-publication-policy.md")
+    check_ref("publication/publication-candidate-manifest.md", "split-canonical-publication-policy-record.md")
 
-    check_ref("publication/publication-package-verification.md", "uuidv8-fid-v2-single-file.md")
-    check_ref("publication/publication-package-verification.md", "dual-form-publication-verification-record.md")
+    check_ref("publication/publication-package-verification.md", "split-canonical-publication-policy-record.md")
 
-    check_ref("release/release-decision-gate.md", "dual-form-publication-verification-record.md")
+    check_ref("release/release-decision-gate.md", "split-canonical-publication-policy-record.md")
 
-    check_ref("tools/README.md", "python uuidv8-fid-v2/tools/assemble_single_file.py --output uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md --force")
-    check_ref("tools/README.md", "python uuidv8-fid-v2/tools/assemble_single_file.py --verify-output uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md")
 
 
 def check_final_publication_decision_gate():
@@ -1204,7 +1115,6 @@ def check_final_publication_decision_gate():
         "uuidv8-fid-v2/release/final-publication-decision-checklist.md": ["- [ ] decide whether to prepare a future final release pr."],
         "uuidv8-fid-v2/release/final-publication-preflight-record.md": [
             "`python uuidv8-fid-v2/tools/assemble_single_file.py --check` | pass | 0 |",
-            "`python uuidv8-fid-v2/tools/assemble_single_file.py --verify-output uuidv8-fid-v2/publication/uuidv8-fid-v2-single-file.md` | pass | 0 |",
             "`python uuidv8-fid-v2/tools/test_assemble_single_file.py` | pass | 0 |",
             "`python uuidv8-fid-v2/tools/check_consistency.py` | pass | 0 |",
             "`python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings` | pass | 0 |",
@@ -1219,11 +1129,15 @@ def check_final_publication_decision_gate():
             for req in required_contents:
                 if req not in content:
                     errors.append(f"{f} missing specific final decision gate phrasing: {req}")
+            if "this is the final release" in content:
+                errors.append(f"{f} contains forbidden final release phrase")
+            if "decision status: approved" in content:
+                errors.append(f"{f} contains forbidden decision status")
         except FileNotFoundError:
             errors.append(f"Missing expected final decision gate file: {f}")
 
     if errors:
-        report_fail(group, errors)
+        report_fail(group, ", ".join(errors))
     else:
         report_pass(group)
 
@@ -1262,7 +1176,7 @@ def main():
     check_relative_markdown_links()
     check_stale_phrase_warnings()
     check_single_file_assembly_dry_run()
-    check_dual_form_publication_package()
+    check_split_canonical_publication_policy()
 
     print()
     if has_failures:

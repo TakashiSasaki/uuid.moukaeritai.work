@@ -17,7 +17,7 @@ Decision status: pending.
 4. pre-publication-sweep.md
 5. release-candidate-execution-record.md
 6. single-file-assembly-dry-run-record.md
-7. dual-form-publication-verification-record.md
+7. split-canonical-publication-policy-record.md
 8. release-candidate-freeze.md
 9. human-review-record.md
 10. release-decision-gate.md
