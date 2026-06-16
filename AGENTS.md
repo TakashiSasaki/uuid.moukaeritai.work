@@ -9,6 +9,7 @@ uuid.moukaeritai.work ブランチには、UUID をブランチ名とするブ�
 - **Knowledge Base Structure**: 
   - All documentation must follow the hierarchical structure in `knowledge/`. 
   - Use `index.md` as the central hub for any new sub-sections.
+  - Furthermore, this repository adheres to Google's Open Knowledge Format (OKF) specification for progressive disclosure. All `index.md` files (in the root and subdirectories) must contain appropriate YAML frontmatter (with at least `type: Index`) and a list of the directory's contents to allow agents to discover resources.
   - The `knowledge-index-generator` skill should be used to update indices after structural changes.
 
 - **GitHub Pages Deployment**:
