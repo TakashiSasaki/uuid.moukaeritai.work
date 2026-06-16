@@ -51,7 +51,7 @@ Command execution results may be recorded in `release-candidate-execution-record
 - [ ] Confirm `0x7a` remains an unassigned extraction/conformance example only.
 - [ ] Confirm top-level stubs remain non-normative.
 - [ ] Confirm release-candidate notes do not declare a final release.
-- [ ] Confirm exactly one generated single-file specification artifact is committed at the allowed path.
+- [ ] Confirm no generated single-file specification artifact is committed.
 - [ ] Confirm no CI workflow was added for UUIDv8-FID-v2 in this stride.
 
 ## 2.5 Release candidate freeze and human review gate
