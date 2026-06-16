@@ -638,6 +638,12 @@ def check_release_non_final_guard():
         ]
     }
 
+    forbidden_phrases = [
+        "this is the final release",
+        "final release is approved",
+        "decision status: approved"
+    ]
+
     errors = []
     for f, required_contents in gate_files.items():
         try:
@@ -645,8 +651,9 @@ def check_release_non_final_guard():
             for req in required_contents:
                 if req not in content:
                     errors.append(f"{f} missing non-final safety string: {req}")
-            if "this is the final release" in content:
-                errors.append(f"{f} contains forbidden final-release declaration")
+            for forbidden in forbidden_phrases:
+                if forbidden in content:
+                    errors.append(f"{f} contains forbidden final-release declaration")
         except FileNotFoundError:
             pass  # Handled by file existence check
 
