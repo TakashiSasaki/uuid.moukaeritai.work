@@ -1110,6 +1110,60 @@ def check_split_canonical_phrases():
     if all(found_phrases.values()):
         report_pass(group)
 
+def check_final_decision_gate_readiness():
+    group = "17. Final decision gate checks"
+    required_files = [
+        "release/final-publication-decision-gate.md",
+        "release/final-publication-decision-checklist.md",
+        "release/final-publication-decision-summary.md",
+        "release/final-publication-preflight-record.md",
+        "release/split-canonical-final-decision-readiness-record.md"
+    ]
+
+    forbidden_phrases = [
+        "this is the final release",
+        "final release is approved",
+        "publication is approved",
+        "decision status: approved"
+    ]
+
+    has_errors = False
+    for filename in required_files:
+        filepath = BASE_DIR / filename
+        if not filepath.exists():
+            report_fail(group, f"Missing required file: {filename}")
+            has_errors = True
+            continue
+
+        try:
+            content = filepath.read_text(encoding='utf-8')
+            content_lower = content.lower()
+
+            if "non-normative" not in content_lower:
+                report_fail(group, f"{filename} missing required 'non-normative' phrasing")
+                has_errors = True
+
+            if "does not declare a final release" not in content_lower:
+                report_fail(group, f"{filename} missing required 'does not declare a final release' phrasing")
+                has_errors = True
+
+            for forbidden in forbidden_phrases:
+                if forbidden in content_lower:
+                    report_fail(group, f"{filename} contains forbidden wording: '{forbidden}'")
+                    has_errors = True
+
+            if filename == "release/final-publication-decision-checklist.md":
+                if "- [ ] Decide whether to prepare a future final release PR." not in content:
+                    report_fail(group, "final-publication-decision-checklist.md is missing or checked the human final decision item.")
+                    has_errors = True
+
+        except Exception as e:
+            report_fail(group, f"Could not read {filename}: {e}")
+            has_errors = True
+
+    if not has_errors:
+        report_pass(group)
+
 def check_split_canonical_publication_policy():
     group = "Split-canonical publication policy checks"
 
@@ -1263,6 +1317,7 @@ def main():
     check_stale_dual_form_wording()
     check_split_canonical_phrases()
     check_split_canonical_publication_policy()
+    check_final_decision_gate_readiness()
 
     print()
     if has_failures:

@@ -17,7 +17,7 @@ See derived release-readiness material:
 
 ## Command Execution Results
 
-Execution context: local working tree on branch `chore/final-decision-readiness`.
+Execution context: local working tree on branch `final-decision-gate-readiness`.
 
 | Command | Status | Exit code | Summary | Notes |
 |---------|--------|-----------|---------|-------|
