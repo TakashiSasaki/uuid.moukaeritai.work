@@ -1040,6 +1040,76 @@ def check_single_file_assembly_dry_run():
     check_ref("tools/README.md", "Generated single-file documents are not committed to the repository")
 
 
+
+def check_stale_dual_form_wording():
+    group = "14. Stale dual-form/current-policy wording checks"
+
+    files_to_check = list(BASE_DIR.rglob("*.md"))
+
+    forbidden_claims = [
+        "a generated single-file artifact is committed",
+        "generated single-file artifact is maintained",
+        "exactly one committed generated artifact is required",
+        "depends on verifying a committed generated artifact",
+        "current milestone: dual-form publication package candidate"
+    ]
+
+    allowlist = {
+        "uuidv8-fid-v2/release/split-canonical-publication-policy-record.md"
+    }
+
+    for filepath in files_to_check:
+        if filepath.is_file():
+            rel_path = filepath.relative_to(REPO_ROOT).as_posix()
+            try:
+                text = filepath.read_text(encoding='utf-8').lower()
+
+                if "dual-form" in text and rel_path not in allowlist:
+                    report_fail(group, f"{rel_path} contains forbidden 'dual-form' wording")
+
+                if rel_path in allowlist:
+                    text_case_sensitive = filepath.read_text(encoding='utf-8')
+                    if "Previous candidate state" not in text_case_sensitive or "New policy" not in text_case_sensitive or "Split-Canonical Publication Simplification" not in text_case_sensitive:
+                        report_fail(group, f"{rel_path} does not clearly frame dual-form as previous state")
+
+                for claim in forbidden_claims:
+                    if claim in text:
+                        report_fail(group, f"{rel_path} contains forbidden claim: {claim}")
+
+            except Exception as e:
+                report_fail(group, f"Could not read {rel_path}: {e}")
+
+    report_pass(group)
+
+def check_split_canonical_phrases():
+    group = "15. Split-canonical required phrases checks"
+    required_phrases_split_canonical = [
+        "the split markdown files are the canonical source and the only maintained publication form in this repository.",
+        "generated single-file documents are not committed to the repository.",
+        "decision status: pending."
+    ]
+    found_phrases = {phrase: False for phrase in required_phrases_split_canonical}
+
+    files_to_check = list(BASE_DIR.rglob("*.md"))
+    for filepath in files_to_check:
+        if filepath.is_file():
+            try:
+                text = filepath.read_text(encoding='utf-8').lower()
+                text_normalized = ' '.join(text.split())
+                for phrase in required_phrases_split_canonical:
+                    phrase_normalized = ' '.join(phrase.split())
+                    if phrase_normalized in text_normalized:
+                        found_phrases[phrase] = True
+            except:
+                pass
+
+    for phrase, found in found_phrases.items():
+        if not found:
+            report_fail(group, f"Missing required split-canonical phrase anywhere: {phrase}")
+
+    if all(found_phrases.values()):
+        report_pass(group)
+
 def check_split_canonical_publication_policy():
     group = "Split-canonical publication policy checks"
 
@@ -1110,29 +1180,43 @@ def check_split_canonical_publication_policy():
 def check_final_publication_decision_gate():
     group = "11. Final Publication Decision Gate"
     gate_files = {
-        "uuidv8-fid-v2/release/final-publication-decision-gate.md": ["this document prepares the final publication decision gate, but the final publication decision remains pending."],
-        "uuidv8-fid-v2/release/final-publication-decision-summary.md": ["decision status: pending."],
-        "uuidv8-fid-v2/release/final-publication-decision-checklist.md": ["- [ ] decide whether to prepare a future final release pr."],
-        "uuidv8-fid-v2/release/final-publication-preflight-record.md": [
-            "`python uuidv8-fid-v2/tools/assemble_single_file.py --check` | pass | 0 |",
-            "`python uuidv8-fid-v2/tools/test_assemble_single_file.py` | pass | 0 |",
-            "`python uuidv8-fid-v2/tools/check_consistency.py` | pass | 0 |",
-            "`python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings` | pass | 0 |",
-            "`python uuidv8-fid-v2/tools/test_check_consistency.py` | pass | 0 |"
+        "uuidv8-fid-v2/release/final-publication-decision-gate.md": ["this document prepares the final publication decision gate, but the final publication decision remains pending.", "non-normative", "does not declare a final release"],
+        "uuidv8-fid-v2/release/final-publication-decision-summary.md": ["decision status: pending.", "non-normative", "does not declare a final release"],
+        "uuidv8-fid-v2/release/final-publication-decision-checklist.md": ["- [ ] decide whether to prepare a future final release pr.", "non-normative", "does not declare a final release"],
+                "uuidv8-fid-v2/release/final-publication-preflight-record.md": [
+            "non-normative", "does not declare a final release",
+            "`python uuidv8-fid-v2/tools/assemble_single_file.py --check` | pass | 0",
+            "`python uuidv8-fid-v2/tools/assemble_single_file.py --stdout > /tmp/uuidv8-fid-v2-single-file.md` | pass | 0",
+            "`python uuidv8-fid-v2/tools/test_assemble_single_file.py` | pass | 0",
+            "`python uuidv8-fid-v2/tools/check_consistency.py` | pass | 0",
+            "`python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings` | pass | 0",
+            "`python uuidv8-fid-v2/tools/test_check_consistency.py` | pass | 0"
+        ],
+        "uuidv8-fid-v2/release/split-canonical-final-decision-readiness-record.md": [
+            "non-normative", "does not declare a final release"
         ]
     }
 
     errors = []
     for f, required_contents in gate_files.items():
         try:
-            content = (REPO_ROOT / f).read_text(encoding='utf-8').lower()
+            content_text = (REPO_ROOT / f).read_text(encoding='utf-8').lower()
             for req in required_contents:
-                if req not in content:
+                if req not in content_text:
                     errors.append(f"{f} missing specific final decision gate phrasing: {req}")
-            if "this is the final release" in content:
-                errors.append(f"{f} contains forbidden final release phrase")
-            if "decision status: approved" in content:
-                errors.append(f"{f} contains forbidden decision status")
+
+            forbidden = [
+                "this is the final release",
+                "final release is approved",
+                "publication is approved",
+                "decision status: approved",
+                "- [x] decide whether to prepare a future final release pr.",
+                "-[x] decide whether to prepare a future final release pr."
+            ]
+            for bad in forbidden:
+                if bad in content_text:
+                    errors.append(f"{f} contains forbidden final release phrase: {bad}")
+
         except FileNotFoundError:
             errors.append(f"Missing expected final decision gate file: {f}")
 
@@ -1176,6 +1260,8 @@ def main():
     check_relative_markdown_links()
     check_stale_phrase_warnings()
     check_single_file_assembly_dry_run()
+    check_stale_dual_form_wording()
+    check_split_canonical_phrases()
     check_split_canonical_publication_policy()
 
     print()

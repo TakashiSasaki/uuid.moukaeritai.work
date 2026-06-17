@@ -696,6 +696,128 @@ def main():
 
 
 
+
+    # FGS1: final-publication-decision-summary.md still saying current milestone is Dual-Form Publication Package Candidate fails
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-summary.md"
+        target.write_text(target.read_text().replace("Split-Canonical Publication Simplification", "Dual-Form Publication Package Candidate"))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS1: final-publication-decision-summary.md still saying current milestone is Dual-Form Publication Package Candidate fails")
+        else:
+            all_passed = report_fail("FGS1", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FGS2: final-publication-decision-checklist.md containing "Dual-form publication package" as a current heading fails
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-checklist.md"
+        target.write_text(target.read_text().replace("Split-canonical publication policy", "Dual-form publication package"))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS2: final-publication-decision-checklist.md containing 'Dual-form publication package' fails")
+        else:
+            all_passed = report_fail("FGS2", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FGS3: final-publication-decision-summary.md missing "Decision status: pending." fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-summary.md"
+        target.write_text(target.read_text().replace("Decision status: pending.", "Decision status: unknown."))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS3: final-publication-decision-summary.md missing 'Decision status: pending.' fails")
+        else:
+            all_passed = report_fail("FGS3", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FGS4: final-publication-decision-summary.md containing "Decision status: approved." fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-summary.md"
+        target.write_text(target.read_text().replace("Decision status: pending.", "Decision status: approved."))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS4: final-publication-decision-summary.md containing 'Decision status: approved.' fails")
+        else:
+            all_passed = report_fail("FGS4", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FGS5: final-publication-decision-checklist.md checking off the final human decision item fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-checklist.md"
+        target.write_text(target.read_text().replace("- [ ] Decide whether to prepare a future final release PR.", "- [x] Decide whether to prepare a future final release PR."))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS5: final-publication-decision-checklist.md checking off the final human decision item fails")
+        else:
+            all_passed = report_fail("FGS5", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FGS6: split-canonical-final-decision-readiness-record.md missing fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "split-canonical-final-decision-readiness-record.md"
+        target.unlink()
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS6: split-canonical-final-decision-readiness-record.md missing fails")
+        else:
+            all_passed = report_fail("FGS6", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FGS7: split-canonical-final-decision-readiness-record.md missing "does not declare a final release" fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "split-canonical-final-decision-readiness-record.md"
+        target.write_text(target.read_text().replace("does not declare a final release", "does declare something else"))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS7: split-canonical-final-decision-readiness-record.md missing 'does not declare a final release' fails")
+        else:
+            all_passed = report_fail("FGS7", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FGS8: a current release-readiness document claiming a committed generated artifact is maintained fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "publication-readiness-summary.md"
+        target.write_text(target.read_text() + "\n\na generated single-file artifact is committed\n")
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS8: a current release-readiness document claiming a committed generated artifact is maintained fails")
+        else:
+            all_passed = report_fail("FGS8", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FGS9: current publication docs claiming exactly one committed generated artifact is required fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "publication" / "reader-guide.md"
+        target.write_text(target.read_text() + "\n\nexactly one committed generated artifact is required\n")
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS9: current publication docs claiming exactly one committed generated artifact is required fails")
+        else:
+            all_passed = report_fail("FGS9", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FGS10: historical dual-form wording in the split-canonical policy record remains allowed only if clearly framed as previous state.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "split-canonical-publication-policy-record.md"
+        target.write_text(target.read_text(encoding="utf-8").replace("Previous candidate state", "Some other state").replace("New policy", "Something").replace("Split-Canonical Publication Simplification", "Something else"), encoding="utf-8")
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS10: historical dual-form wording without proper framing fails")
+        else:
+            all_passed = report_fail("FGS10", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+
     if all_passed:
         print("UUIDv8-FID-v2 checker harness: PASS")
         sys.exit(0)

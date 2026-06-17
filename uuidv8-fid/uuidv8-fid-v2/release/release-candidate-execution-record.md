@@ -4,7 +4,7 @@ This document is strictly non-normative and does not declare a final release. Th
 
 ## Status
 
-Current milestone: Dual-Form Publication Package Candidate.
+Current milestone: Split-Canonical Publication Simplification.
 Next gate: Final Publication Decision Gate.
 This stride adds derived release-readiness material for making that future decision.
 Decision status: pending.
@@ -17,15 +17,16 @@ See derived release-readiness material:
 
 ## Command Execution Results
 
-Execution context: local working tree on branch `uuidv8-fid-final-publication-gate`.
+Execution context: local working tree on branch `chore/final-decision-readiness`.
 
 | Command | Status | Exit code | Summary | Notes |
 |---------|--------|-----------|---------|-------|
+| `python uuidv8-fid-v2/tools/assemble_single_file.py --check` | PASS | 0 | PASS | verified canonical invariants |
+| `python uuidv8-fid-v2/tools/assemble_single_file.py --stdout > /tmp/uuidv8-fid-v2-single-file.md` | PASS | 0 | PASS | wrote successfully |
+| `python uuidv8-fid-v2/tools/test_assemble_single_file.py` | PASS | 0 | PASS | All tests passed |
 | `python uuidv8-fid-v2/tools/check_consistency.py` | PASS | 0 | PASS | no warnings |
 | `python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings` | PASS | 0 | PASS | no warnings |
 | `python uuidv8-fid-v2/tools/test_check_consistency.py` | PASS | 0 | PASS | All mutations passed |
-| `python uuidv8-fid-v2/tools/assemble_single_file.py --check` | PASS | 0 | PASS | verified canonical invariants |
-| `python uuidv8-fid-v2/tools/test_assemble_single_file.py` | PASS | 0 | PASS | All tests passed |
 
 ## Manual Invariant Review
 
@@ -36,8 +37,8 @@ Execution context: local working tree on branch `uuidv8-fid-final-publication-ga
 - [x] `0x7a` remains an unassigned extraction/conformance example only
 - [x] top-level stubs remain non-normative
 - [x] final release is not declared
-- [x] exactly one generated single-file specification artifact exists at the allowed path
-- [x] no other generated single-file artifact exists
+- [x] no generated single-file specification artifact is committed
+- [x] assemble_single_file.py remains on-demand tooling only
 - [x] no CI workflow was added in this stride
 
 ## Limitations
