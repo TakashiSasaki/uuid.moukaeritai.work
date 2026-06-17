@@ -1,6 +1,7 @@
 # Final Release Declaration Candidate
 
-This document is strictly non-normative. It prepares the repository for a future final release declaration.
+This document is strictly non-normative.
+This document does not declare a final release. It prepares the repository for a future final release declaration.
 
 This candidate does not create a Git tag, does not create a GitHub Release, and does not perform external publication.
 

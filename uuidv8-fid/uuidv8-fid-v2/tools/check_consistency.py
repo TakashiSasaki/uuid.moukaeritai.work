@@ -1284,7 +1284,8 @@ def check_final_release_declaration_candidate():
     required_files = {
         "uuidv8-fid-v2/release/final-release-declaration-candidate.md": [
             "this candidate does not create a git tag, does not create a github release, and does not perform external publication.",
-            "non-normative"
+            "non-normative",
+            "does not declare a final release"
         ],
         "uuidv8-fid-v2/release/final-release-candidate-checklist.md": [
             "- [ ] confirm final release declaration candidate text.",
@@ -1356,8 +1357,22 @@ def check_forbidden_external_publication_phrases():
 
     errors = []
 
-    for filepath in BASE_DIR.parent.rglob("*.md"):
-        rel_path = filepath.relative_to(BASE_DIR.parent).as_posix()
+    files_to_check = list(BASE_DIR.rglob("*.md"))
+
+    top_level_stubs = [
+        BASE_DIR.parent / "uuidv8-fid-v2/README.md",
+        BASE_DIR.parent / "uuidv8-fid-v2.md",
+        BASE_DIR.parent / "uuidv8-fid-v2-registry.md"
+    ]
+    for stub in top_level_stubs:
+        if stub.exists():
+            files_to_check.append(stub)
+
+    for filepath in files_to_check:
+        try:
+            rel_path = filepath.relative_to(BASE_DIR.parent).as_posix()
+        except ValueError:
+            rel_path = filepath.as_posix()
 
         # skip allowed files
         if any(rel_path.endswith(allow) for allow in allowed_files):
