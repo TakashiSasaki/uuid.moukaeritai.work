@@ -12,7 +12,7 @@ This document is strictly non-normative and does not declare a final release.
 ## Registry invariants
 - [ ] Confirm that the split files remain the canonical source.
 
-## Dual-form publication package
+## Split-canonical publication policy
 - [ ] Confirm no generated single-file artifact is committed.
 
 ## Generated artifact verification
