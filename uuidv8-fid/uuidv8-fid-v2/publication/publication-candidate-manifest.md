@@ -8,7 +8,7 @@ This manifest defines the boundaries of the publication candidate package for pr
 
 ## Status
 
-Current milestone: Dual-Form Publication Package Candidate.
+Current milestone: Split-Canonical Publication Simplification.
 Next gate: Final Publication Decision Gate.
 This stride adds derived release-readiness material for making that future decision.
 Decision status: pending.
@@ -104,6 +104,7 @@ See derived release-readiness material:
 | [../release/final-publication-decision-checklist.md](../release/final-publication-decision-checklist.md) | Final publication decision checklist | `derived release-readiness material` | Checklist for making the final publication decision. |
 | [../release/final-publication-preflight-record.md](../release/final-publication-preflight-record.md) | Final publication preflight record | `derived release-readiness material` | Preflight command execution record for the decision gate. |
 | [../release/final-publication-decision-summary.md](../release/final-publication-decision-summary.md) | Final publication decision summary | `derived release-readiness material` | Current readiness state summary for the decision gate. |
+| [../release/split-canonical-final-decision-readiness-record.md](../release/split-canonical-final-decision-readiness-record.md) | Split-canonical final decision readiness record | `derived release-readiness material` | Record of split-canonical final decision readiness. |
 
 ## 8. Local tooling
 

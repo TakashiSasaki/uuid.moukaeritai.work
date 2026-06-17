@@ -6,7 +6,7 @@ These tools do not define the specification and do not introduce new normative r
 
 ## Status
 
-Current milestone: Dual-Form Publication Package Candidate.
+Current milestone: Split-Canonical Publication Simplification.
 Next gate: Final Publication Decision Gate.
 This stride adds derived release-readiness material for making that future decision.
 Decision status: pending.
@@ -41,7 +41,7 @@ The assembly tool generates a single-file document on demand. Generated single-f
 python uuidv8-fid-v2/tools/assemble_single_file.py --output /tmp/uuidv8-fid-v2-single-file.md
 ```
 
-To verify the committed artifact matches the regenerated output exactly, run:
+To verify the regenerated output passes constraints locally, run:
 
 ```text
 ```

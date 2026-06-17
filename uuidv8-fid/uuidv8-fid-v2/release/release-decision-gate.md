@@ -30,7 +30,7 @@ A complete review must be recorded and passed, satisfying the constraints set ou
 
 ## Status
 
-Current milestone: Dual-Form Publication Package Candidate.
+Current milestone: Split-Canonical Publication Simplification.
 Next gate: Final Publication Decision Gate.
 This stride adds derived release-readiness material for making that future decision.
 Decision status: pending.

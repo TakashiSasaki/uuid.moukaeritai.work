@@ -5,7 +5,7 @@ This directory contains derived, non-normative release-candidate readiness notes
 These documents do not declare a final release and do not introduce new normative requirements.
 This document does not declare a final release.
 
-Current milestone: Dual-Form Publication Package Candidate.
+Current milestone: Split-Canonical Publication Simplification.
 Next gate: Final Publication Decision Gate.
 This stride adds derived release-readiness material for making that future decision.
 Decision status: pending.
@@ -27,3 +27,4 @@ Decision status: pending.
 12. final-publication-decision-checklist.md
 13. final-publication-preflight-record.md
 14. final-publication-decision-summary.md
+15. split-canonical-final-decision-readiness-record.md
