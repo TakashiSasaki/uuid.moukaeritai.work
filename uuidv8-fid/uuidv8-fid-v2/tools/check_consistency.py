@@ -1069,7 +1069,7 @@ def check_stale_dual_form_wording():
 
                 if rel_path in allowlist:
                     text_case_sensitive = filepath.read_text(encoding='utf-8')
-                    if "Previous candidate state" not in text_case_sensitive and "New policy" not in text_case_sensitive and "Split-Canonical Publication Simplification" not in text_case_sensitive:
+                    if "Previous candidate state" not in text_case_sensitive or "New policy" not in text_case_sensitive or "Split-Canonical Publication Simplification" not in text_case_sensitive:
                         report_fail(group, f"{rel_path} does not clearly frame dual-form as previous state")
 
                 for claim in forbidden_claims:
@@ -1183,8 +1183,14 @@ def check_final_publication_decision_gate():
         "uuidv8-fid-v2/release/final-publication-decision-gate.md": ["this document prepares the final publication decision gate, but the final publication decision remains pending.", "non-normative", "does not declare a final release"],
         "uuidv8-fid-v2/release/final-publication-decision-summary.md": ["decision status: pending.", "non-normative", "does not declare a final release"],
         "uuidv8-fid-v2/release/final-publication-decision-checklist.md": ["- [ ] decide whether to prepare a future final release pr.", "non-normative", "does not declare a final release"],
-        "uuidv8-fid-v2/release/final-publication-preflight-record.md": [
-            "non-normative", "does not declare a final release"
+                "uuidv8-fid-v2/release/final-publication-preflight-record.md": [
+            "non-normative", "does not declare a final release",
+            "`python uuidv8-fid-v2/tools/assemble_single_file.py --check` | pass | 0",
+            "`python uuidv8-fid-v2/tools/assemble_single_file.py --stdout > /tmp/uuidv8-fid-v2-single-file.md` | pass | 0",
+            "`python uuidv8-fid-v2/tools/test_assemble_single_file.py` | pass | 0",
+            "`python uuidv8-fid-v2/tools/check_consistency.py` | pass | 0",
+            "`python uuidv8-fid-v2/tools/check_consistency.py --fail-on-warnings` | pass | 0",
+            "`python uuidv8-fid-v2/tools/test_check_consistency.py` | pass | 0"
         ],
         "uuidv8-fid-v2/release/split-canonical-final-decision-readiness-record.md": [
             "non-normative", "does not declare a final release"

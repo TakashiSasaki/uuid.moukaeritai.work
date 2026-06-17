@@ -27,3 +27,4 @@ Decision status: pending.
 12. final-publication-decision-checklist.md
 13. final-publication-preflight-record.md
 14. final-publication-decision-summary.md
+15. split-canonical-final-decision-readiness-record.md

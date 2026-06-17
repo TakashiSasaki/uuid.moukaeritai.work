@@ -16,6 +16,7 @@ See derived release-readiness material:
 - [release/final-publication-decision-checklist.md](../release/final-publication-decision-checklist.md)
 - [release/final-publication-preflight-record.md](../release/final-publication-preflight-record.md)
 - [release/final-publication-decision-summary.md](../release/final-publication-decision-summary.md)
+- [release/split-canonical-final-decision-readiness-record.md](../release/split-canonical-final-decision-readiness-record.md)
 
 | Path | Role | Normative status | Notes |
 | --- | --- | --- | --- |
@@ -69,6 +70,7 @@ See derived release-readiness material:
 | [uuidv8-fid-v2/release/final-publication-decision-checklist.md](../release/final-publication-decision-checklist.md) | Final publication decision checklist | `derived release-readiness material` | Checklist for making the final publication decision. |
 | [uuidv8-fid-v2/release/final-publication-preflight-record.md](../release/final-publication-preflight-record.md) | Final publication preflight record | `derived release-readiness material` | Preflight command execution record for the decision gate. |
 | [uuidv8-fid-v2/release/final-publication-decision-summary.md](../release/final-publication-decision-summary.md) | Final publication decision summary | `derived release-readiness material` | Current readiness state summary for the decision gate. |
+| [uuidv8-fid-v2/release/split-canonical-final-decision-readiness-record.md](../release/split-canonical-final-decision-readiness-record.md) | Split-canonical final decision readiness record | `derived release-readiness material` | Record of split-canonical final decision readiness. |
 | [uuidv8-fid-v2/tools/README.md](../tools/README.md) | Tooling README | `derived local tooling` | Instructions for local tools. |
 | [uuidv8-fid-v2/tools/assemble_single_file.py](../tools/assemble_single_file.py) | Single-file assembly tool | `derived local tooling` | Python script for single-file assembly dry run. |
 | [uuidv8-fid-v2/tools/test_assemble_single_file.py](../tools/test_assemble_single_file.py) | Assembly tool test harness | `derived local tooling` | Test harness for the assembly tool. |
