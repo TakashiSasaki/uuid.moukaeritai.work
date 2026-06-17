@@ -32,8 +32,8 @@ A complete review must be recorded and passed, satisfying the constraints set ou
 
 Current milestone: Split-Canonical Publication Simplification.
 Next gate: Final Publication Decision Gate.
-This stride adds derived release-readiness material for making that future decision.
-Decision status: pending.
+This stride advances to a Final Release Declaration Candidate.
+Decision status: final release declaration candidate prepared; external publication not performed.
 
 See derived release-readiness material:
 * `final-publication-decision-gate.md`

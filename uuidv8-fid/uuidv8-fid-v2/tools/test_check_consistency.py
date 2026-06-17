@@ -721,15 +721,15 @@ def main():
         else:
             all_passed = report_fail("FGS2", "rc!=0", result.returncode, result.stdout, result.stderr)
 
-    # FGS3: final-publication-decision-summary.md missing "Decision status: pending." fails.
+    # FGS3: final-publication-decision-summary.md missing "Decision status: final release declaration candidate prepared; external publication not performed." fails.
     with tempfile.TemporaryDirectory() as td:
         temp_dir = Path(td)
         setup_temp_repo(temp_dir)
         target = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-summary.md"
-        target.write_text(target.read_text().replace("Decision status: pending.", "Decision status: unknown."))
+        target.write_text(target.read_text().replace("Decision status: final release declaration candidate prepared; external publication not performed.", "Decision status: unknown."))
         result = run_checker(temp_dir)
         if result.returncode != 0:
-            report_pass("FGS3: final-publication-decision-summary.md missing 'Decision status: pending.' fails")
+            report_pass("FGS3: final-publication-decision-summary.md missing 'Decision status: final release declaration candidate prepared; external publication not performed.' fails")
         else:
             all_passed = report_fail("FGS3", "rc!=0", result.returncode, result.stdout, result.stderr)
 
@@ -738,7 +738,7 @@ def main():
         temp_dir = Path(td)
         setup_temp_repo(temp_dir)
         target = temp_dir / "uuidv8-fid-v2" / "release" / "final-publication-decision-summary.md"
-        target.write_text(target.read_text().replace("Decision status: pending.", "Decision status: approved."))
+        target.write_text(target.read_text().replace("Decision status: final release declaration candidate prepared; external publication not performed.", "Decision status: approved."))
         result = run_checker(temp_dir)
         if result.returncode != 0:
             report_pass("FGS4: final-publication-decision-summary.md containing 'Decision status: approved.' fails")
@@ -816,6 +816,136 @@ def main():
             report_pass("FGS10: historical dual-form wording without proper framing fails")
         else:
             all_passed = report_fail("FGS10", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+
+    # FRC1: missing final-release-declaration-candidate.md fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-release-declaration-candidate.md"
+        if target.exists():
+            target.unlink()
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC1: missing final-release-declaration-candidate.md fails.")
+        else:
+            all_passed = report_fail("FRC1", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FRC2: missing final-release-candidate-checklist.md fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-release-candidate-checklist.md"
+        if target.exists():
+            target.unlink()
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC2: missing final-release-candidate-checklist.md fails.")
+        else:
+            all_passed = report_fail("FRC2", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FRC3: missing final-release-candidate-verification-record.md fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-release-candidate-verification-record.md"
+        if target.exists():
+            target.unlink()
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC3: missing final-release-candidate-verification-record.md fails.")
+        else:
+            all_passed = report_fail("FRC3", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FRC4: missing final-release-notes-draft.md fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-release-notes-draft.md"
+        if target.exists():
+            target.unlink()
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC4: missing final-release-notes-draft.md fails.")
+        else:
+            all_passed = report_fail("FRC4", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FRC5: declaration candidate missing required no-tag/no-release/no-publication sentence fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-release-declaration-candidate.md"
+        if target.exists():
+            target.write_text(target.read_text().replace("does not perform external publication.", "does perform external publication."))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC5: declaration candidate missing required no-tag/no-release/no-publication sentence fails.")
+        else:
+            all_passed = report_fail("FRC5", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FRC6: checklist item "Decide whether to create a future Git tag." checked off fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-release-candidate-checklist.md"
+        if target.exists():
+            target.write_text(target.read_text().replace("- [ ] Decide whether to create a future Git tag.", "- [x] Decide whether to create a future Git tag."))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC6: checklist item 'Decide whether to create a future Git tag.' checked off fails.")
+        else:
+            all_passed = report_fail("FRC6", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FRC7: checklist item "Decide whether to create a future GitHub Release." checked off fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-release-candidate-checklist.md"
+        if target.exists():
+            target.write_text(target.read_text().replace("- [ ] Decide whether to create a future GitHub Release.", "- [x] Decide whether to create a future GitHub Release."))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC7: checklist item 'Decide whether to create a future GitHub Release.' checked off fails.")
+        else:
+            all_passed = report_fail("FRC7", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FRC8: final-release-notes-draft.md implying a GitHub Release was already created fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "final-release-notes-draft.md"
+        if target.exists():
+            target.write_text(target.read_text().replace("does not by itself create a Git tag or GitHub Release.", "creates a GitHub Release."))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC8: final-release-notes-draft.md implying a GitHub Release was already created fails.")
+        else:
+            all_passed = report_fail("FRC8", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FRC9: release/00-index.md missing links to final release candidate docs fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "00-index.md"
+        if target.exists():
+            target.write_text(target.read_text().replace("final-release-notes-draft.md", "draft-notes.md"))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC9: release/00-index.md missing links to final release candidate docs fails.")
+        else:
+            all_passed = report_fail("FRC9", "rc!=0", result.returncode, result.stdout, result.stderr)
+
+    # FRC10: generated single-file Markdown artifact committed under publication/ still fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "publication" / "generated-single-file-test.md"
+        target.write_text("This is generated dry-run output assembled from the split UUIDv8-FID-v2 source files")
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FRC10: generated single-file Markdown artifact committed under publication/ still fails.")
+        else:
+            all_passed = report_fail("FRC10", "rc!=0", result.returncode, result.stdout, result.stderr)
 
 
     if all_passed:

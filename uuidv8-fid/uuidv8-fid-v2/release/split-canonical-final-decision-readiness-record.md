@@ -10,5 +10,5 @@ This document records that the final decision gate is being prepared under the s
 | Next gate | Final Publication Decision Gate |
 | Split Markdown files | The canonical source and only maintained publication form |
 | Generated single-file | On-demand only and not committed |
-| Final publication decision | Pending |
+| Final publication decision | Final release declaration candidate prepared; external publication not performed |
 | Final release | Undeclared |
