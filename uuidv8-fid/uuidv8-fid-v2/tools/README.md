@@ -41,10 +41,6 @@ The assembly tool generates a single-file document on demand. Generated single-f
 python uuidv8-fid-v2/tools/assemble_single_file.py --output /tmp/uuidv8-fid-v2-single-file.md
 ```
 
-To verify the committed artifact matches the regenerated output exactly, run:
-
-```text
-```
 
 The tool can also perform a dry run without writing a file:
 
