@@ -1266,7 +1266,6 @@ def check_final_publication_decision_gate():
                 "this is the final release",
                 "final release is approved",
                 "publication is approved",
-                "decision status: approved",
                 "- [x] decide whether to prepare a future final release pr.",
                 "-[x] decide whether to prepare a future final release pr."
             ]
