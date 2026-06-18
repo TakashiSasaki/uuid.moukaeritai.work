@@ -817,6 +817,17 @@ def main():
         else:
             all_passed = report_fail("FGS10", "rc!=0", result.returncode, result.stdout, result.stderr)
 
+    # FGS11: split-canonical-final-decision-readiness-record.md containing an approved table state fails.
+    with tempfile.TemporaryDirectory() as td:
+        temp_dir = Path(td)
+        setup_temp_repo(temp_dir)
+        target = temp_dir / "uuidv8-fid-v2" / "release" / "split-canonical-final-decision-readiness-record.md"
+        target.write_text(target.read_text().replace("| Final release | Undeclared |", "| Final release | Approved |"))
+        result = run_checker(temp_dir)
+        if result.returncode != 0:
+            report_pass("FGS11: split-canonical-final-decision-readiness-record.md containing an approved table state fails")
+        else:
+            all_passed = report_fail("FGS11", "rc!=0", result.returncode, result.stdout, result.stderr)
 
     # FRC1: missing final-release-declaration-candidate.md fails.
     with tempfile.TemporaryDirectory() as td:
