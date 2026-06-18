@@ -1307,7 +1307,8 @@ def check_final_release_declaration_candidate():
         ],
         "uuidv8-fid-v2/release/final-release-notes-draft.md": [
             "this is a draft for future release notes and does not by itself create a git tag or github release.",
-            "non-normative"
+            "non-normative",
+            "does not declare a final release"
         ]
     }
 

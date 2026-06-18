@@ -1,6 +1,7 @@
 # Final Release Notes Draft
 
 This document is strictly non-normative.
+This document does not declare a final release.
 This is a draft for future release notes and does not by itself create a Git tag or GitHub Release.
 
 ## Overview
