@@ -7,8 +7,8 @@ This document does not declare a final release.
 
 Current milestone: Split-Canonical Publication Simplification.
 Next gate: Final Publication Decision Gate.
-This stride adds derived release-readiness material for making that future decision.
-Decision status: pending.
+This stride advances to a Final Release Declaration Candidate.
+Decision status: final release declaration candidate prepared; external publication not performed.
 
 ## Readiness Documents
 1. release-candidate-notes.md
@@ -28,3 +28,9 @@ Decision status: pending.
 13. final-publication-preflight-record.md
 14. final-publication-decision-summary.md
 15. split-canonical-final-decision-readiness-record.md
+
+## Final Release Declaration Candidate
+16. final-release-declaration-candidate.md
+17. final-release-candidate-checklist.md
+18. final-release-notes-draft.md
+19. final-release-candidate-verification-record.md

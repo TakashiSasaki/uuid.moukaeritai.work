@@ -12,4 +12,4 @@ This document is strictly non-normative and does not declare a final release.
 - known non-goals: Not declaring a final release, no new format IDs assigned;
 - remaining human decision: Decision status pending.
 
-Decision status: pending.
+Decision status: final release declaration candidate prepared; external publication not performed.

@@ -1235,7 +1235,7 @@ def check_final_publication_decision_gate():
     group = "11. Final Publication Decision Gate"
     gate_files = {
         "uuidv8-fid-v2/release/final-publication-decision-gate.md": ["this document prepares the final publication decision gate, but the final publication decision remains pending.", "non-normative", "does not declare a final release"],
-        "uuidv8-fid-v2/release/final-publication-decision-summary.md": ["decision status: pending.", "non-normative", "does not declare a final release"],
+        "uuidv8-fid-v2/release/final-publication-decision-summary.md": ["decision status: final release declaration candidate prepared; external publication not performed.", "non-normative", "does not declare a final release"],
         "uuidv8-fid-v2/release/final-publication-decision-checklist.md": ["- [ ] decide whether to prepare a future final release pr.", "non-normative", "does not declare a final release"],
                 "uuidv8-fid-v2/release/final-publication-preflight-record.md": [
             "non-normative", "does not declare a final release",
@@ -1279,6 +1279,120 @@ def check_final_publication_decision_gate():
     else:
         report_pass(group)
 
+def check_final_release_declaration_candidate():
+    group = "18. Final Release Declaration Candidate"
+    required_files = {
+        "uuidv8-fid-v2/release/final-release-declaration-candidate.md": [
+            "this candidate does not create a git tag, does not create a github release, and does not perform external publication.",
+            "non-normative",
+            "does not declare a final release"
+        ],
+        "uuidv8-fid-v2/release/final-release-candidate-checklist.md": [
+            "- [ ] confirm final release declaration candidate text.",
+            "- [ ] confirm no normative uuidv8-fid-v2 semantics changed.",
+            "- [ ] confirm no new format id was assigned.",
+            "- [ ] confirm registry semantics remain unchanged.",
+            "- [ ] confirm bit layout remains unchanged.",
+            "- [ ] confirm validation semantics remain unchanged.",
+            "- [ ] confirm conformance vector outcomes remain unchanged.",
+            "- [ ] confirm implementation pseudocode behavior remains unchanged.",
+            "- [ ] confirm split markdown files remain the canonical source and only maintained publication form.",
+            "- [ ] confirm no generated single-file markdown artifact is committed.",
+            "- [ ] decide whether to create a future git tag.",
+            "- [ ] decide whether to create a future github release.",
+            "non-normative"
+        ],
+        "uuidv8-fid-v2/release/final-release-candidate-verification-record.md": [
+            "non-normative"
+        ],
+        "uuidv8-fid-v2/release/final-release-notes-draft.md": [
+            "this is a draft for future release notes and does not by itself create a git tag or github release.",
+            "non-normative",
+            "does not declare a final release"
+        ]
+    }
+
+    errors = []
+    for rel_path, required_phrases in required_files.items():
+        filepath = BASE_DIR.parent / rel_path
+        if not filepath.exists():
+            errors.append(f"Missing required final release declaration candidate file: {rel_path}")
+            continue
+
+        content = filepath.read_text(encoding="utf-8").lower()
+        for phrase in required_phrases:
+            if phrase not in content:
+                errors.append(f"{rel_path} missing required phrase: {phrase}")
+
+    # check if 00-index.md links to the new candidate docs
+    index_path = BASE_DIR.parent / "uuidv8-fid-v2/release/00-index.md"
+    if index_path.exists():
+        index_content = index_path.read_text(encoding="utf-8").lower()
+        for cand_file in ["final-release-declaration-candidate.md", "final-release-candidate-checklist.md", "final-release-candidate-verification-record.md", "final-release-notes-draft.md"]:
+            if cand_file not in index_content:
+                errors.append(f"00-index.md missing link to {cand_file}")
+
+    if errors:
+        for err in errors:
+            report_fail(group, err)
+    else:
+        report_pass(group)
+
+def check_forbidden_external_publication_phrases():
+    group = "19. Forbidden external-publication phrase check"
+
+    forbidden_phrases = [
+        "git tag created",
+        "github release created",
+        "published final release",
+        "external publication completed",
+        "publication status: completed",
+        "release status: published",
+        "decision status: approved"
+    ]
+
+    allowed_files = [
+        "tools/check_consistency.py",
+        "tools/test_check_consistency.py"
+    ]
+
+    errors = []
+
+    files_to_check = list(BASE_DIR.rglob("*.md"))
+
+    top_level_stubs = [
+        BASE_DIR.parent / "uuidv8-fid-v2/README.md",
+        BASE_DIR.parent / "uuidv8-fid-v2.md",
+        BASE_DIR.parent / "uuidv8-fid-v2-registry.md"
+    ]
+    for stub in top_level_stubs:
+        if stub.exists():
+            files_to_check.append(stub)
+
+    for filepath in files_to_check:
+        try:
+            rel_path = filepath.relative_to(BASE_DIR.parent).as_posix()
+        except ValueError:
+            rel_path = filepath.as_posix()
+
+        # skip allowed files
+        if any(rel_path.endswith(allow) for allow in allowed_files):
+            continue
+
+        try:
+            content = filepath.read_text(encoding='utf-8').lower()
+            for forb in forbidden_phrases:
+                if forb in content:
+                    errors.append(f"{rel_path} contains forbidden phrase: '{forb}'")
+        except Exception:
+            pass
+
+    if errors:
+        for err in errors:
+            report_fail(group, err)
+    else:
+        report_pass(group)
+
 def main():
     parser = argparse.ArgumentParser(description="UUIDv8-FID-v2 local consistency checker.", allow_abbrev=False)
     parser.add_argument("--fail-on-warnings", action="store_true", help="Fail if any warnings are present.")
@@ -1318,6 +1432,8 @@ def main():
     check_split_canonical_phrases()
     check_split_canonical_publication_policy()
     check_final_decision_gate_readiness()
+    check_final_release_declaration_candidate()
+    check_forbidden_external_publication_phrases()
 
     print()
     if has_failures:
